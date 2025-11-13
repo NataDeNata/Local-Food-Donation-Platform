@@ -11,4 +11,6 @@ export interface Donation {
   status: DonationStatus;
   postedAt: string; // ISO date
   acceptedBy?: string; // optional name of recipient
+  latitude?: number;
+  longitude?: number;
 }

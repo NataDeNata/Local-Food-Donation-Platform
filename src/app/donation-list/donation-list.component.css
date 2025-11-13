@@ -18,3 +18,10 @@
     .btn:hover { filter: brightness(1.05); }
     .link { color: #2563eb; text-decoration: none; }
     .empty { color: #6b7280; text-align: center; padding: 2rem 0; }
+
+    google-map {
+  display: block;
+  height: 400px;
+  width: 100%;
+  margin-bottom: 1rem;
+}
