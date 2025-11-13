@@ -1,0 +1,39 @@
+  <section>
+      <h1 class="title">Active donations</h1>
+
+      <div class="filters">
+        <button class="pill" [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+        <button class="pill" [class.active]="filter() === 'available'" (click)="setFilter('available')">Available</button>
+        <button class="pill" [class.active]="filter() === 'accepted'" (click)="setFilter('accepted')">Accepted</button>
+        <button class="pill" [class.active]="filter() === 'completed'" (click)="setFilter('completed')">Completed</button>
+      </div>
+
+      <div class="grid">
+        <article *ngFor="let d of filtered()" class="card">
+          <header class="card-header">
+            <a [routerLink]="['/donation', d.id]" class="card-title">{{ d.title }}</a>
+            <span class="badge" [class.available]="d.status==='available'"
+                                 [class.accepted]="d.status==='accepted'"
+                                 [class.completed]="d.status==='completed'">
+              {{ d.status }}
+            </span>
+          </header>
+          <p class="muted">{{ d.description }}</p>
+          <ul class="meta">
+            <li><strong>Qty:</strong> {{ d.quantity }}</li>
+            <li><strong>Location:</strong> {{ d.location }}</li>
+            <li><strong>Posted:</strong> {{ d.postedAt | date:'short' }}</li>
+          </ul>
+
+          <footer class="card-actions">
+            <a [routerLink]="['/donation', d.id]" class="link">Details</a>
+            <button class="btn" *ngIf="d.status==='available'" (click)="quickAccept(d)">Accept</button>
+            <button class="btn secondary" *ngIf="d.status==='accepted'" (click)="complete(d)">Mark Completed</button>
+          </footer>
+        </article>
+      </div>
+
+      <div class="empty" *ngIf="filtered().length === 0">
+        No donations found for this filter.
+      </div>
+    </section>

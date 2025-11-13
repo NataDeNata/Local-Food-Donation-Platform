@@ -1,0 +1,41 @@
+<section class="form">
+      <h1 class="title">Post a donation</h1>
+
+      <form (ngSubmit)="submit()" #f="ngForm">
+        <div class="field">
+          <label>Title</label>
+          <input name="title" [(ngModel)]="model.title" required />
+        </div>
+
+        <div class="field">
+          <label>Description</label>
+          <textarea name="description" [(ngModel)]="model.description" rows="4" required></textarea>
+        </div>
+
+        <div class="field">
+          <label>Quantity</label>
+          <input type="number" name="quantity" [(ngModel)]="model.quantity" min="1" required />
+        </div>
+
+        <div class="field">
+          <label>Location</label>
+          <input name="location" [(ngModel)]="model.location" required />
+        </div>
+
+        <div class="field two">
+          <div>
+            <label>Contact name</label>
+            <input name="contactName" [(ngModel)]="model.contactName" required />
+          </div>
+          <div>
+            <label>Contact phone</label>
+            <input name="contactPhone" [(ngModel)]="model.contactPhone" required />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" type="submit" [disabled]="f.invalid">Post donation</button>
+          <button class="btn ghost" type="button" (click)="reset()">Reset</button>
+        </div>
+      </form>
+    </section>
