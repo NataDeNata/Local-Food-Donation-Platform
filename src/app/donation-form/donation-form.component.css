@@ -10,3 +10,4 @@
     .btn { background: #2563eb; color: #fff; border: none; padding: 0.5rem 0.75rem; border-radius: 6px; cursor: pointer; }
     .btn.ghost { background: transparent; color: #2563eb; border: 1px solid #2563eb; }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .error{color: red;}

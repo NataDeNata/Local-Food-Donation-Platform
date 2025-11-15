@@ -23,6 +23,9 @@
           <span class="label">Location</span>
           <span>{{ donation()!.location }}</span>
         </div>
+        <!-- Inline map preview -->
+        <div id="detailMap" style="height:300px; width:100%; margin-top:10px;"></div>
+
         <div class="row">
           <span class="label">Contact</span>
           <span>{{ donation()!.contactName }} — {{ donation()!.contactPhone }}</span>
@@ -33,6 +36,7 @@
         </div>
         <div class="actions">
           <button class="btn" *ngIf="donation()!.status==='available'" (click)="accept()">Accept donation</button>
+          <button class="btn" (click)="openInGoogleMaps()">View on Google Maps</button>
           <button class="btn secondary" *ngIf="donation()!.status==='accepted'" (click)="complete()">Mark completed</button>
         </div>
       </div>

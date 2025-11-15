@@ -29,6 +29,14 @@ export class DonationListComponent {
     this.filter.set(f);
   }
 
+  ngOnInit() {
+  const first = this.svc.donations().find(d => d.latitude && d.longitude);
+  if (first) {
+    this.center = { lat: first.latitude!, lng: first.longitude! };
+  }
+}
+
+
   quickAccept(d: Donation) {
     const name = prompt('Enter your name to accept this donation:');
     if (name && name.trim().length > 0) {
@@ -43,17 +51,17 @@ export class DonationListComponent {
   }
 
   // Build markers array for Google Maps
-  get markers() {
-    return this.filtered().map(d => ({
+ get markers() {
+  return this.filtered()
+    .filter(d => d.latitude && d.longitude)
+    .map(d => ({
       id: d.id,
-      position: {
-        lat: d.latitude ?? this.center.lat,
-        lng: d.longitude ?? this.center.lng
-      },
+      position: { lat: d.latitude!, lng: d.longitude! },
       label: { text: d.title, color: 'black' },
       options: { icon: this.getIcon(d.status) }
     }));
-  }
+}
+
 
   private getIcon(status: string) {
     switch (status) {
@@ -68,4 +76,11 @@ export class DonationListComponent {
   goToDonation(id: string) {
     this.router.navigate(['/donation', id]);
   }
+
+  delete(d: Donation) {
+  if (confirm(`Are you sure you want to delete "${d.title}"?`)) {
+    this.svc.deleteDonation(d.id);
+  }
+}
+
 }

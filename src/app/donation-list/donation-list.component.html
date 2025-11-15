@@ -1,7 +1,7 @@
 <section>
   <h1 class="title">Active donations</h1>
 
-  <!-- Google Maps -->
+  <!-- Google Maps overview -->
   <google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
     <map-marker *ngFor="let m of markers"
                 [position]="m.position"
@@ -28,19 +28,28 @@
               [class.available]="d.status==='available'"
               [class.accepted]="d.status==='accepted'"
               [class.completed]="d.status==='completed'">
-          {{ d.status }}
+              {{ d.status }}
         </span>
       </header>
+
       <p class="muted">{{ d.description }}</p>
       <ul class="meta">
         <li><strong>Qty:</strong> {{ d.quantity }}</li>
-        <li><strong>Location:</strong> {{ d.location }}</li>
+       <li>
+        <strong>Location:</strong>
+        {{ d.location + " City" }}
+        <span *ngIf="d.latitude && d.longitude">
+          ({{ d.latitude.toFixed(5) }}, {{ d.longitude.toFixed(5) }})
+        </span>
+      </li>
+
         <li><strong>Posted:</strong> {{ d.postedAt | date:'short' }}</li>
       </ul>
       <footer class="card-actions">
         <a [routerLink]="['/donation', d.id]" class="link">Details</a>
         <button class="btn" *ngIf="d.status==='available'" (click)="quickAccept(d)">Accept</button>
         <button class="btn secondary" *ngIf="d.status==='accepted'" (click)="complete(d)">Mark Completed</button>
+        <button class="btn2 danger" (click)="delete(d)">Delete</button>
       </footer>
     </article>
   </div>

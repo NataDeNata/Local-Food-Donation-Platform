@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DonationService } from '../../services/donation.service';
 
@@ -11,7 +11,7 @@ import { DonationService } from '../../services/donation.service';
   templateUrl: './donation-form.component.html',
   styleUrls: ['./donation-form.component.css']
 })
-export class DonationFormComponent {
+export class DonationFormComponent implements AfterViewInit {
   model = {
     title: '',
     description: '',
@@ -19,16 +19,115 @@ export class DonationFormComponent {
     location: '',
     contactName: '',
     contactPhone: '',
+    latitude: 0,
+    longitude: 0
   };
 
   constructor(private svc: DonationService, private router: Router) {}
 
-  submit() {
+  ngAfterViewInit() {
+    const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+      center: { lat: 16.4023, lng: 120.5960 }, // Baguio City center
+      zoom: 13,
+    });
+
+    let marker: google.maps.Marker;
+
+    // Helper function to parse address components
+    const parseAddress = (components: google.maps.GeocoderAddressComponent[], formatted?: string, fallback?: string) => {
+      const street = components.find(c => c.types.includes('route'))?.long_name;
+      const barangay =
+        components.find(c => c.types.includes('sublocality_level_1'))?.long_name ||
+        components.find(c => c.types.includes('sublocality_level_2'))?.long_name ||
+        components.find(c => c.types.includes('neighborhood'))?.long_name;
+      const city = components.find(c => c.types.includes('locality'))?.long_name;
+
+      if (street && barangay && city) return `${street}, ${barangay}, ${city}`;
+      if (barangay && city) return `${barangay}, ${city}`;
+      return formatted || fallback || '';
+    };
+
+    // Handle map click
+    map.addListener('click', (event: google.maps.MapMouseEvent) => {
+      this.model.latitude = event.latLng!.lat();
+      this.model.longitude = event.latLng!.lng();
+
+      if (marker) marker.setMap(null);
+      marker = new google.maps.Marker({ position: event.latLng!, map });
+
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ location: event.latLng! }, (results, status) => {
+        if (status === 'OK' && results && results.length > 0) {
+          const components = results[0].address_components;
+          this.model.location = parseAddress(components, results[0].formatted_address);
+        } else {
+          this.model.location = `Pinned at (${this.model.latitude.toFixed(5)}, ${this.model.longitude.toFixed(5)})`;
+        }
+      });
+    });
+
+    // Autocomplete search box
+    const input = document.getElementById('addressInput') as HTMLInputElement;
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      types: ['address'],
+      componentRestrictions: { country: 'ph' } // restrict to Philippines
+    });
+
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      const loc = place.geometry?.location;
+
+      if (!place.geometry) {
+        console.warn('No geometry returned for place', place);
+        return;
+      }
+    
+        if (!loc) {
+          console.warn('No geometry returned for place', place);
+          return;
+        }
+
+      map.setCenter(loc);
+
+      if (marker) marker.setMap(null);
+      marker = new google.maps.Marker({ position: loc, map });
+
+      this.model.latitude = loc.lat();
+      this.model.longitude = loc.lng();
+
+      if (place.address_components) {
+        this.model.location = parseAddress(place.address_components, place.formatted_address, input.value);
+      } else {
+        this.model.location = place.formatted_address || input.value;
+      }
+    });
+  }
+
+  submit(form: NgForm) {
+    if (form.invalid) {
+      return; // stop if form is invalid
+    }
+      // Clean up phone number
+  this.model.contactPhone = this.model.contactPhone.replace(/\s|-/g, '');
+
+    if (!this.model.location || this.model.location.trim().length === 0) {
+      this.model.location = `Pinned at (${this.model.latitude.toFixed(5)}, ${this.model.longitude.toFixed(5)})`;
+    }
+
     this.svc.addDonation(this.model);
     this.router.navigateByUrl('/');
   }
 
   reset() {
-    this.model = { title: '', description: '', quantity: 1, location: '', contactName: '', contactPhone: '' };
+    this.model = {
+      title: '',
+      description: '',
+      quantity: 1,
+      location: '',
+      contactName: '',
+      contactPhone: '',
+      latitude: 0,
+      longitude: 0
+    };
   }
 }

@@ -21,32 +21,9 @@ export class DonationService {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this._donations()));
   }
 
+  // No example donations — start with an empty list
   private seed(): Donation[] {
-    return [
-      {
-        id: crypto.randomUUID(),
-        title: 'Fresh vegetables',
-        description: 'Assorted leafy greens and tomatoes from today.',
-        quantity: 10,
-        location: 'Baguio City Public Market',
-        contactName: 'Ate Joy',
-        contactPhone: '0917-000-0000',
-        status: 'available',
-        postedAt: new Date().toISOString(),
-      },
-      {
-        id: crypto.randomUUID(),
-        title: 'Bread loaves',
-        description: 'Day-old bread, still good. Pick-up only.',
-        quantity: 20,
-        location: 'Session Road',
-        contactName: 'Kuya Mark',
-        contactPhone: '0918-111-1111',
-        status: 'accepted',
-        postedAt: new Date().toISOString(),
-        acceptedBy: 'Community Pantry',
-      },
-    ];
+    return [];
   }
 
   getById(id: string): Donation | undefined {
@@ -85,4 +62,10 @@ export class DonationService {
     );
     this.persist();
   }
+
+  deleteDonation(id: string) {
+  this._donations.update(list => list.filter(d => d.id !== id));
+  this.persist();
+}
+
 }
