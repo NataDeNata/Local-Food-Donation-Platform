@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { GoogleMapsModule } from '@angular/google-maps';
@@ -12,11 +12,17 @@ import { Donation } from '../../models/donation';
   templateUrl: './donation-list.component.html',
   styleUrls: ['./donation-list.component.css']
 })
-export class DonationListComponent {
+export class DonationListComponent implements OnInit {
+  // Signal to hold all donations
+  donations = signal<Donation[]>([]);
+
+  // Filter signal
   filter = signal<'all' | 'available' | 'accepted' | 'completed'>('all');
+
+  // Computed filtered list
   filtered = computed(() => {
     const f = this.filter();
-    const list = this.svc.donations();
+    const list = this.donations();
     return f === 'all' ? list : list.filter(d => d.status === f);
   });
 
@@ -25,43 +31,47 @@ export class DonationListComponent {
 
   constructor(private svc: DonationService, private router: Router) {}
 
+  ngOnInit() {
+    // Subscribe to Firestore updates
+    this.svc.listen(list => {
+      this.donations.set(list);
+
+      // Recenter map on first donation with coords
+      const first = list.find(d => d.latitude && d.longitude);
+      if (first) {
+        this.center = { lat: first.latitude!, lng: first.longitude! };
+      }
+    });
+  }
+
   setFilter(f: 'all' | 'available' | 'accepted' | 'completed') {
     this.filter.set(f);
   }
 
-  ngOnInit() {
-  const first = this.svc.donations().find(d => d.latitude && d.longitude);
-  if (first) {
-    this.center = { lat: first.latitude!, lng: first.longitude! };
-  }
-}
-
-
-  quickAccept(d: Donation) {
+  async quickAccept(d: Donation) {
     const name = prompt('Enter your name to accept this donation:');
     if (name && name.trim().length > 0) {
-      this.svc.acceptDonation(d.id, name.trim());
+      await this.svc.acceptDonation(d.id!, name.trim());
     }
   }
 
-  complete(d: Donation) {
+  async complete(d: Donation) {
     if (confirm('Mark this donation as completed?')) {
-      this.svc.completeDonation(d.id);
+      await this.svc.completeDonation(d.id!);
     }
   }
 
   // Build markers array for Google Maps
- get markers() {
-  return this.filtered()
-    .filter(d => d.latitude && d.longitude)
-    .map(d => ({
-      id: d.id,
-      position: { lat: d.latitude!, lng: d.longitude! },
-      label: { text: d.title, color: 'black' },
-      options: { icon: this.getIcon(d.status) }
-    }));
-}
-
+  get markers() {
+    return this.filtered()
+      .filter(d => d.latitude != null && d.longitude != null)
+      .map(d => ({
+        id: d.id,
+        position: { lat: d.latitude!, lng: d.longitude! },
+        label: { text: d.title, color: 'black' },
+        options: { icon: this.getIcon(d.status) }
+      }));
+  }
 
   private getIcon(status: string) {
     switch (status) {
@@ -72,15 +82,13 @@ export class DonationListComponent {
     }
   }
 
-  // Navigate when marker clicked
   goToDonation(id: string) {
     this.router.navigate(['/donation', id]);
   }
 
-  delete(d: Donation) {
-  if (confirm(`Are you sure you want to delete "${d.title}"?`)) {
-    this.svc.deleteDonation(d.id);
+  async delete(d: Donation) {
+    if (confirm(`Are you sure you want to delete "${d.title}"?`)) {
+      await this.svc.deleteDonation(d.id!);
+    }
   }
-}
-
 }

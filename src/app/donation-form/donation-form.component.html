@@ -45,17 +45,28 @@
   </div>
 
   <div class="field">
-  <label>Contact Phone</label>
-  <input name="contactPhone"
-         [(ngModel)]="model.contactPhone"
-         #contactPhone="ngModel"
-         required
-        pattern="^[0-9\s-]{10,}$" />
-      <div class="error" *ngIf="donationForm.submitted && contactPhone.invalid">
-        Contact phone must be at least 10 digits, numbers only
-      </div>
-</div>
+    <label>Contact Phone</label>
+    <input name="contactPhone"
+           [(ngModel)]="model.contactPhone"
+           #contactPhone="ngModel"
+           required
+           pattern="^[0-9\s-]{10,}$" />
+    <div class="error" *ngIf="donationForm.submitted && contactPhone.invalid">
+      Contact phone must be at least 10 digits, numbers only
+    </div>
+  </div>
 
+  <!-- Photo upload -->
+  <div class="field">
+    <label>Photos</label>
+    <input type="file" (change)="onFileSelected($event)" multiple />
+    <div class="preview" *ngIf="selectedFiles.length > 0">
+      <p>Selected photos:</p>
+      <ul>
+        <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+      </ul>
+    </div>
+  </div>
 
   <!-- Map container -->
   <div id="map" style="height:400px; width:100%; margin-top:20px;"></div>

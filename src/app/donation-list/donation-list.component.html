@@ -7,7 +7,7 @@
                 [position]="m.position"
                 [label]="m.label"
                 [options]="m.options"
-                (mapClick)="goToDonation(m.id)">
+                (mapClick)="goToDonation(m.id!)">
     </map-marker>
   </google-map>
 
@@ -28,23 +28,30 @@
               [class.available]="d.status==='available'"
               [class.accepted]="d.status==='accepted'"
               [class.completed]="d.status==='completed'">
-              {{ d.status }}
+          {{ d.status }}
         </span>
       </header>
 
+      <!-- Thumbnail preview -->
+      <div class="thumbnail" *ngIf="d.photos?.length">
+       <img *ngIf="d.photos?.[0]" [src]="d.photos?.[0]" alt="Donation photo" />
+      </div>
+
       <p class="muted">{{ d.description }}</p>
+
       <ul class="meta">
         <li><strong>Qty:</strong> {{ d.quantity }}</li>
-       <li>
-        <strong>Location:</strong>
-        {{ d.location + " City" }}
-        <span *ngIf="d.latitude && d.longitude">
+        <li>
+          <strong>Location:</strong>
+          {{ d.location }}
+          <span *ngIf="d.latitude != null && d.longitude != null">
           ({{ d.latitude.toFixed(5) }}, {{ d.longitude.toFixed(5) }})
         </span>
-      </li>
 
+        </li>
         <li><strong>Posted:</strong> {{ d.postedAt | date:'short' }}</li>
       </ul>
+
       <footer class="card-actions">
         <a [routerLink]="['/donation', d.id]" class="link">Details</a>
         <button class="btn" *ngIf="d.status==='available'" (click)="quickAccept(d)">Accept</button>

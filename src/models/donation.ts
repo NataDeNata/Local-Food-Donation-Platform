@@ -1,7 +1,7 @@
 export type DonationStatus = 'available' | 'accepted' | 'completed';
 
 export interface Donation {
-  id: string;
+  id?: string;
   title: string;
   description: string;
   quantity: number;
@@ -13,4 +13,5 @@ export interface Donation {
   acceptedBy?: string; // optional name of recipient
   latitude?: number;
   longitude?: number;
+  photos?: string[]; // array of image URLs or base64 strings
 }

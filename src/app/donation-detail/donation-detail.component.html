@@ -1,48 +1,65 @@
- <section *ngIf="donation(); else notFound">
-      <a routerLink="/" class="link">&larr; Back to list</a>
-      <h1 class="title">{{ donation()!.title }}</h1>
+<section *ngIf="donation; else notFound">
+  <a routerLink="/" class="link">&larr; Back to list</a>
+  <h1 class="title">{{ donation.title }}</h1>
 
-      <div class="detail">
-        <div class="row">
-          <span class="label">Status</span>
-          <span class="badge" [class.available]="donation()!.status==='available'"
-                             [class.accepted]="donation()!.status==='accepted'"
-                             [class.completed]="donation()!.status==='completed'">
-            {{ donation()!.status }}
-          </span>
-        </div>
-        <div class="row">
-          <span class="label">Description</span>
-          <span>{{ donation()!.description }}</span>
-        </div>
-        <div class="row">
-          <span class="label">Quantity</span>
-          <span>{{ donation()!.quantity }}</span>
-        </div>
-        <div class="row">
-          <span class="label">Location</span>
-          <span>{{ donation()!.location }}</span>
-        </div>
-        <!-- Inline map preview -->
-        <div id="detailMap" style="height:300px; width:100%; margin-top:10px;"></div>
+  <div class="detail">
+    <div class="row">
+      <span class="label">Status</span>
+      <span class="badge"
+            [class.available]="donation.status==='available'"
+            [class.accepted]="donation.status==='accepted'"
+            [class.completed]="donation.status==='completed'">
+        {{ donation.status }}
+      </span>
+    </div>
 
-        <div class="row">
-          <span class="label">Contact</span>
-          <span>{{ donation()!.contactName }} — {{ donation()!.contactPhone }}</span>
-        </div>
-        <div class="row" *ngIf="donation()!.acceptedBy">
-          <span class="label">Accepted by</span>
-          <span>{{ donation()!.acceptedBy }}</span>
-        </div>
-        <div class="actions">
-          <button class="btn" *ngIf="donation()!.status==='available'" (click)="accept()">Accept donation</button>
-          <button class="btn" (click)="openInGoogleMaps()">View on Google Maps</button>
-          <button class="btn secondary" *ngIf="donation()!.status==='accepted'" (click)="complete()">Mark completed</button>
-        </div>
+    <div class="row">
+      <span class="label">Description</span>
+      <span>{{ donation.description }}</span>
+    </div>
+
+    <div class="row">
+      <span class="label">Quantity</span>
+      <span>{{ donation.quantity }}</span>
+    </div>
+
+    <div class="row">
+      <span class="label">Location</span>
+      <span>{{ donation.location }}</span>
+    </div>
+
+    <!-- Inline map preview -->
+    <div id="detailMap" style="height:300px; width:100%; margin-top:10px;"></div>
+
+    <div class="row">
+      <span class="label">Contact</span>
+      <span>{{ donation.contactName }} — {{ donation.contactPhone }}</span>
+    </div>
+
+    <div class="row" *ngIf="donation.acceptedBy">
+      <span class="label">Accepted by</span>
+      <span>{{ donation.acceptedBy }}</span>
+    </div>
+
+    <!-- Photo gallery -->
+    <div class="row" *ngIf="donation.photos?.length">
+      <span class="label">Photos</span>
+      <div class="photo-gallery">
+        <img *ngFor="let photo of donation.photos"
+             [src]="photo"
+             alt="Donation photo" />
       </div>
-    </section>
+    </div>
 
-    <ng-template #notFound>
-      <p class="empty">Donation not found.</p>
-      <a routerLink="/" class="link">Back to list</a>
-    </ng-template>
+    <div class="actions">
+      <button class="btn" *ngIf="donation.status==='available'" (click)="accept()">Accept donation</button>
+      <button class="btn" (click)="openInGoogleMaps()">View on Google Maps</button>
+      <button class="btn secondary" *ngIf="donation.status==='accepted'" (click)="complete()">Mark completed</button>
+    </div>
+  </div>
+</section>
+
+<ng-template #notFound>
+  <p class="empty">Donation not found.</p>
+  <a routerLink="/" class="link">Back to list</a>
+</ng-template>

@@ -1,71 +1,83 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Donation, DonationStatus } from '../models/donation';
-
-const STORAGE_KEY = 'donations';
+import {
+  Firestore,
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  getDoc,
+  deleteDoc,
+  CollectionReference
+} from '@angular/fire/firestore';
+import { onSnapshot } from '@angular/fire/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 
 @Injectable({ providedIn: 'root' })
 export class DonationService {
-  private _donations = signal<Donation[]>(this.load());
-  readonly donations = this._donations.asReadonly();
+  private donationsCol: CollectionReference;
 
-  private load(): Donation[] {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) as Donation[] : this.seed();
-    } catch {
-      return this.seed();
-    }
+  private storage = getStorage(); //use AngularFire helper
+
+  constructor(private firestore: Firestore) {
+    this.donationsCol = collection(this.firestore, 'donations');
   }
 
-  private persist() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this._donations()));
+  // Real-time listener
+  listen(callback: (donations: Donation[]) => void) {
+    return onSnapshot(this.donationsCol, snapshot => {
+      const list: Donation[] = snapshot.docs.map(d => {
+        return {
+          id: d.id,
+          ...(d.data() as Omit<Donation, 'id'>)
+        } as Donation;
+      });
+      callback(list);
+    });
   }
 
-  // No example donations — start with an empty list
-  private seed(): Donation[] {
-    return [];
-  }
-
-  getById(id: string): Donation | undefined {
-    return this._donations().find(d => d.id === id);
-  }
-
-  addDonation(input: Omit<Donation, 'id' | 'status' | 'postedAt'>) {
-    const donation: Donation = {
-      id: crypto.randomUUID(),
+  async addDonation(input: Omit<Donation, 'id' | 'status' | 'postedAt'>) {
+    const donationData: Omit<Donation, 'id'> = {
+      ...input,
       status: 'available',
       postedAt: new Date().toISOString(),
-      ...input,
     };
-    this._donations.update(list => [donation, ...list]);
-    this.persist();
-    return donation;
+    const docRef = await addDoc(this.donationsCol, donationData);
+    return { ...donationData, id: docRef.id } as Donation;
   }
 
-  acceptDonation(id: string, acceptedBy: string) {
-    this._donations.update(list =>
-      list.map(d => d.id === id ? { ...d, status: 'accepted', acceptedBy } : d)
-    );
-    this.persist();
+  async getById(id: string): Promise<Donation | undefined> {
+    const snap = await getDoc(doc(this.firestore, 'donations', id));
+    return snap.exists()
+      ? ({ id: snap.id, ...(snap.data() as Omit<Donation, 'id'>) } as Donation)
+      : undefined;
   }
 
-  completeDonation(id: string) {
-    this._donations.update(list =>
-      list.map(d => d.id === id ? { ...d, status: 'completed' } : d)
-    );
-    this.persist();
+  async acceptDonation(id: string, acceptedBy: string) {
+    await updateDoc(doc(this.firestore, 'donations', id), {
+      status: 'accepted',
+      acceptedBy
+    });
   }
 
-  setStatus(id: string, status: DonationStatus) {
-    this._donations.update(list =>
-      list.map(d => d.id === id ? { ...d, status } : d)
-    );
-    this.persist();
+  async completeDonation(id: string) {
+    await updateDoc(doc(this.firestore, 'donations', id), {
+      status: 'completed'
+    });
   }
 
-  deleteDonation(id: string) {
-  this._donations.update(list => list.filter(d => d.id !== id));
-  this.persist();
-}
+  async setStatus(id: string, status: DonationStatus) {
+    await updateDoc(doc(this.firestore, 'donations', id), { status });
+  }
 
+  async deleteDonation(id: string) {
+    await deleteDoc(doc(this.firestore, 'donations', id));
+  }
+
+  // Safe photo upload using AngularFire Storage SDK
+  async uploadPhoto(file: File): Promise<string> {
+    const photoRef = ref(this.storage, `donations/${crypto.randomUUID()}-${file.name}`);
+    await uploadBytes(photoRef, file);
+    return await getDownloadURL(photoRef);
+  }
 }

@@ -7,5 +7,5 @@ export const routes: Routes = [
   { path: '', component: DonationListComponent, title: 'Donations' },
   { path: 'new', component: DonationFormComponent, title: 'Post Donation' },
   { path: 'donation/:id', component: DonationDetailComponent, title: 'Donation Detail' },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

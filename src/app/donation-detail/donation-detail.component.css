@@ -12,3 +12,15 @@
     .btn.secondary { background: #6b7280; }
     .empty { color: #6b7280; }
     .link { color: #2563eb; text-decoration: none; }
+
+    .photo-gallery {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.photo-gallery img {
+  max-width: 150px;
+  border-radius: 4px;
+  object-fit: cover;
+}

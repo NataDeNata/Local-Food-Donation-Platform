@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DonationService } from '../../services/donation.service';
+import { Donation } from '../../models/donation';
 
 @Component({
   selector: 'donation-form',
@@ -12,7 +13,8 @@ import { DonationService } from '../../services/donation.service';
   styleUrls: ['./donation-form.component.css']
 })
 export class DonationFormComponent implements AfterViewInit {
-  model = {
+  // Use the Donation type minus id/status/postedAt
+  model: Omit<Donation, 'id' | 'status' | 'postedAt'> = {
     title: '',
     description: '',
     quantity: 1,
@@ -20,21 +22,27 @@ export class DonationFormComponent implements AfterViewInit {
     contactName: '',
     contactPhone: '',
     latitude: 0,
-    longitude: 0
+    longitude: 0,
+    photos: []
   };
+
+  selectedFiles: File[] = [];
 
   constructor(private svc: DonationService, private router: Router) {}
 
   ngAfterViewInit() {
     const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
-      center: { lat: 16.4023, lng: 120.5960 }, // Baguio City center
+      center: { lat: 16.4023, lng: 120.5960 },
       zoom: 13,
     });
 
     let marker: google.maps.Marker;
 
-    // Helper function to parse address components
-    const parseAddress = (components: google.maps.GeocoderAddressComponent[], formatted?: string, fallback?: string) => {
+    const parseAddress = (
+      components: google.maps.GeocoderAddressComponent[],
+      formatted?: string,
+      fallback?: string
+    ) => {
       const street = components.find(c => c.types.includes('route'))?.long_name;
       const barangay =
         components.find(c => c.types.includes('sublocality_level_1'))?.long_name ||
@@ -61,7 +69,7 @@ export class DonationFormComponent implements AfterViewInit {
           const components = results[0].address_components;
           this.model.location = parseAddress(components, results[0].formatted_address);
         } else {
-          this.model.location = `Pinned at (${this.model.latitude.toFixed(5)}, ${this.model.longitude.toFixed(5)})`;
+          this.model.location = `Pinned at (${this.model.latitude!.toFixed(5)}, ${this.model.longitude!.toFixed(5)})`;
         }
       });
     });
@@ -70,22 +78,17 @@ export class DonationFormComponent implements AfterViewInit {
     const input = document.getElementById('addressInput') as HTMLInputElement;
     const autocomplete = new google.maps.places.Autocomplete(input, {
       types: ['address'],
-      componentRestrictions: { country: 'ph' } // restrict to Philippines
+      componentRestrictions: { country: 'ph' }
     });
 
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
       const loc = place.geometry?.location;
 
-      if (!place.geometry) {
+      if (!loc) {
         console.warn('No geometry returned for place', place);
         return;
       }
-    
-        if (!loc) {
-          console.warn('No geometry returned for place', place);
-          return;
-        }
 
       map.setCenter(loc);
 
@@ -103,18 +106,41 @@ export class DonationFormComponent implements AfterViewInit {
     });
   }
 
-  submit(form: NgForm) {
-    if (form.invalid) {
-      return; // stop if form is invalid
+  // Handle file input
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.selectedFiles = Array.from(input.files);
     }
-      // Clean up phone number
-  this.model.contactPhone = this.model.contactPhone.replace(/\s|-/g, '');
+  }
+
+  async submit(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
+
+    // Clean up phone number
+    this.model.contactPhone = this.model.contactPhone.replace(/\s|-/g, '');
 
     if (!this.model.location || this.model.location.trim().length === 0) {
-      this.model.location = `Pinned at (${this.model.latitude.toFixed(5)}, ${this.model.longitude.toFixed(5)})`;
+      this.model.location = `Pinned at (${this.model.latitude!.toFixed(5)}, ${this.model.longitude!.toFixed(5)})`;
     }
 
-    this.svc.addDonation(this.model);
+    // Upload photos via DonationService
+    const urls: string[] = [];
+    for (const file of this.selectedFiles) {
+      try {
+        const downloadUrl = await this.svc.uploadPhoto(file);
+        urls.push(downloadUrl);
+      } catch (err: any) {
+        console.error('Failed to upload file', file.name, err);
+        throw err;
+      }
+    }
+    this.model.photos = urls;
+
+    // Save donation to Firestore
+    await this.svc.addDonation(this.model);
     this.router.navigateByUrl('/');
   }
 
@@ -127,7 +153,9 @@ export class DonationFormComponent implements AfterViewInit {
       contactName: '',
       contactPhone: '',
       latitude: 0,
-      longitude: 0
+      longitude: 0,
+      photos: []
     };
+    this.selectedFiles = [];
   }
 }
