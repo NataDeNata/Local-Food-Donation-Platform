@@ -1,32 +1,39 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import express from "express";
+import multer from "multer";
 
-import {setGlobalOptions} from "firebase-functions";
-import {onRequest} from "firebase-functions/https";
-import * as logger from "firebase-functions/logger";
+admin.initializeApp();
+const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+app.post("/upload", upload.single("file"), async (req, res) => {
+  try {
+    const bucket = admin.storage().bucket();
+    const file = req.file;
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+    if (!file) {
+      res.status(400).send("No file uploaded.");
+      return;
+    }
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+    const fileName = `donations/${Date.now()}-${file.originalname}`;
+    const fileUpload = bucket.file(fileName);
+
+    await fileUpload.save(file.buffer, {
+      contentType: file.mimetype,
+    });
+
+    const [url] = await fileUpload.getSignedUrl({
+      action: "read",
+      expires: "03-01-2030",
+    });
+
+    res.send({ downloadUrl: url });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Upload failed.");
+  }
+});
+
+exports.api = functions.https.onRequest(app);

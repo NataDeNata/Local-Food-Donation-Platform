@@ -75,9 +75,21 @@ export class DonationService {
   }
 
   // Safe photo upload using AngularFire Storage SDK
-  async uploadPhoto(file: File): Promise<string> {
-    const photoRef = ref(this.storage, `donations/${crypto.randomUUID()}-${file.name}`);
-    await uploadBytes(photoRef, file);
-    return await getDownloadURL(photoRef);
+ async uploadPhotoViaFunction(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Upload failed: ${response.status} ${text}`);
   }
+
+  const data = await response.json();
+  return data.downloadUrl;
+}
 }
