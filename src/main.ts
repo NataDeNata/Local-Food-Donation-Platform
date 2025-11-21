@@ -10,7 +10,12 @@ import { routes } from './app/app.routes';
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirebaseApp(() => {
+      if (!environment.firebase?.storageBucket) {
+        throw new Error('Missing storageBucket in environment.firebase config');
+      }
+      return initializeApp(environment.firebase);
+    }),
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage())
   ]

@@ -128,12 +128,11 @@ export class DonationFormComponent implements AfterViewInit {
 
     // Upload photos via DonationService
     const urls: string[] = [];
-      for (const file of this.selectedFiles) {
-        const downloadUrl = await this.svc.uploadPhotoViaFunction(file);
-        urls.push(downloadUrl);
-      }
-      this.model.photos = urls;
-
+    for (const file of this.selectedFiles) {
+      const downloadUrl = await this.svc.uploadPhoto(file);
+      urls.push(downloadUrl);
+    }
+    this.model.photos = urls;
 
     // Save donation to Firestore
     await this.svc.addDonation(this.model);
