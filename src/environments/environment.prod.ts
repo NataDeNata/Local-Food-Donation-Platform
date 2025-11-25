@@ -1,9 +1,11 @@
-export const environment = {  
-    production: true,  
-    firebase: {    apiKey: "AIzaSyCYL95-1tE-RpmqMSYv61t9-pNmccH304A",   
-    authDomain: "local-food-donation-1664b.firebaseapp.com",    
-    projectId: "local-food-donation-1664b",    
-    storageBucket: "local-food-donation-1664b",   
-    messagingSenderId: "134441293662",    
-    appId: "1:134441293662:web:36a570feca5d9c5533e1cf"  
-}};
+export const environment = {
+  production: true,
+  firebase: {
+    apiKey: "AIzaSyCYL95-1tE-RpmqMSYv61t9-pNmccH304A",
+    authDomain: "local-food-donation-1664b.firebaseapp.com",
+    projectId: "local-food-donation-1664b",
+    storageBucket: "local-food-donation-1664b",
+    messagingSenderId: "134441293662",
+    appId: "1:134441293662:web:36a570feca5d9c5533e1cf"
+  }
+};

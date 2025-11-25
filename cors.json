@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["http://localhost:4200", "https://local-food-donate7567--local-food-donation-1664b.asia-southeast1.hosted.app"],
+    "origin": ["*"],
     "method": ["GET", "POST", "PUT", "HEAD", "DELETE"],
     "maxAgeSeconds": 3600,
     "responseHeader": ["Content-Type", "Authorization"]
