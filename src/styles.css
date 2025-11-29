@@ -194,3 +194,9 @@ body {
   background: #334155 !important;
   color: #cbd5e1 !important;
 }
+
+/* Remove or override any global nav-links background for dark mode support */
+.nav-links,
+.nav-links.open {
+  background: unset !important;
+}

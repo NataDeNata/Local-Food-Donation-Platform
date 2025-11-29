@@ -278,7 +278,7 @@ google-map {
 }
 
 :root.dark-mode .marker-label-bg {
-  background: rgba(24, 24, 27, 0.92);
+  background: rgba(45, 10, 75, 0.92); /* dark purple for dark mode */
   color: #f3f4f6;
-  border: 1px solid #27272a;
+  border: 1px solid #a21caf;
 }

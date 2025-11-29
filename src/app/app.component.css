@@ -91,6 +91,34 @@
   }
 }
 
+/* Ensure no other background is set for nav-links in light or dark mode except in the intended media query and dark override */
+@media (max-width: 900px) {
+  .nav-links {
+    background: #fff !important;
+    /* ...existing code... */
+  }
+  .nav-links.open {
+    background: #fff !important;
+    /* ...existing code... */
+  }
+}
+
+/* Remove background from .nav-links in the gradient version to avoid specificity issues */
+@media (max-width: 900px) {
+  .nav-links {
+    /* Remove or comment out this line to avoid conflict */
+    /* background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); */
+    background: none !important;
+    /* ...existing code... */
+  }
+  .nav-links.open {
+    /* Remove or comment out this line to avoid conflict */
+    /* background: #fff !important; */
+    background: none !important;
+    /* ...existing code... */
+  }
+}
+
 @media (max-width: 600px) {
   .header {
     padding: 0.5rem;
@@ -595,7 +623,7 @@
 :root.dark-mode .header,
 :root.dark-mode .nav,
 :root.dark-mode .nav-links.open {
-  background: #2d0a4b !important; /* dark purple */
+  background: #2d0a4b !important;
   color: #f3f4f6 !important;
 }
 
@@ -615,6 +643,7 @@
   }
   .nav-links {
     display: none;
+    background: #fff !important;
   }
   .nav-links.open {
     display: flex;
@@ -623,12 +652,30 @@
     top: 60px;
     left: 0;
     right: 0;
-    background: #fff;
+    background: #fff !important;
     z-index: 1000;
     padding: 1rem;
   }
-  :root.dark-mode .nav-links.open {
-    background: #2d0a4b !important;
+  .nav {
+    position: relative;
+  }
+}
+
+:root.dark-mode .nav-links,
+:root.dark-mode .nav-links.open {
+  background: #2d0a4b !important;
+  color: #f3f4f6 !important;
+  border-top: 1px solid #a21caf;
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    /* ...existing code... */
+    /* Make sure no background is set here */
+  }
+  .nav-links.open {
+    /* ...existing code... */
+    /* Make sure no background is set here */
   }
 }
 
@@ -672,4 +719,43 @@
 
 :root.dark-mode .loading-text {
   color: #bbf7d0;
+}
+
+/* Remove all background from .nav-links and .nav-links.open in all media queries */
+@media (max-width: 900px) {
+  .nav-links {
+    background: transparent !important;
+    /* ...existing code... */
+  }
+  .nav-links.open {
+    background: transparent !important;
+    /* ...existing code... */
+  }
+}
+
+/* Remove all conflicting backgrounds and set correct backgrounds for nav-links on mobile */
+@media (max-width: 900px) {
+  .nav-links,
+  .nav-links.open {
+    background: #fff !important;
+    /* ...existing code... */
+  }
+}
+
+/* Place this at the very end of your CSS file for highest specificity */
+:root.dark-mode .nav-links,
+:root.dark-mode .nav-links.open {
+  background: rgba(45,10,75,0.96) !important; /* semi-opaque dark purple */
+  color: #f3f4f6 !important;
+  border-top: 1px solid #a21caf;
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    /* ...existing code... */
+    /* Make sure no background is set here */
+  }
+  .nav-links.open {
+  
+  }
 }
