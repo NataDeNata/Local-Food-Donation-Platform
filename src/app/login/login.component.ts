@@ -2,8 +2,9 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, UserRole } from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { ThemeService } from '../../services/theme.service';
+import { Auth, fetchSignInMethodsForEmail } from '@angular/fire/auth';
 
 @Component({
   selector: 'login',
@@ -16,12 +17,17 @@ export class LoginComponent {
   email = '';
   password = '';
   confirmPassword = '';
-  readonly isSignup = signal(false);
-  role: UserRole = 'user';
+  role: 'user' | 'admin' = 'user';
   adminRequestSent = false;
   passwordMismatch = false;
   showPassword = signal(false);
   showConfirmPassword = signal(false);
+  isSignup = signal(false);
+  verificationNotice = false;
+
+  get isInstantAdminSignup() {
+    return this.isSignup() && this.email.trim().toLowerCase() === 'ynatz.ynatz@gmail.com';
+  }
 
   constructor(
     public authService: AuthService,
@@ -29,41 +35,63 @@ export class LoginComponent {
     public themeService: ThemeService
   ) {}
 
-  async submit() {
-    if (!this.email) return;
+  isSignupMode() {
+    return this.isSignup();
+  }
 
-    if (this.isSignup() && this.role === 'admin') {
-      // Do not create an account, just show pending message
+  toggleSignup() {
+    this.isSignup.update((v: boolean) => !v);
+    this.authService.error.set(null);
+    this.passwordMismatch = false;
+    this.adminRequestSent = false;
+  }
+
+  async emailExists(email: string): Promise<boolean> {
+    try {
+      const auth = this.authService['auth'] as Auth;
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      return methods && methods.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  async submit() {
+    this.authService.error.set(null);
+    this.passwordMismatch = false;
+    this.verificationNotice = false;
+
+    // Only allow admin request if admin role is selected
+    if (this.isSignup() && this.role === 'admin' && !this.isInstantAdminSignup) {
       this.adminRequestSent = true;
       return;
     }
 
-    if (!this.password) return;
-
-    if (this.isSignup() && this.password !== this.confirmPassword) {
+    if (this.isSignup() && !this.isInstantAdminSignup && this.password !== this.confirmPassword) {
       this.passwordMismatch = true;
       return;
-    } else {
-      this.passwordMismatch = false;
     }
 
-    let success = false;
-    if (this.isSignup()) {
-      success = await this.authService.signup(this.email, this.password, this.role);
+    if (!this.isSignup()) {
+      const success = await this.authService.login(this.email, this.password);
+      if (success) {
+        this.router.navigate(['/']);
+      }
     } else {
-      success = await this.authService.login(this.email, this.password);
+      if (this.isInstantAdminSignup) {
+        const result = await this.authService.instantAdminSignup(this.email, this.password);
+        if (result) {
+          this.router.navigate(['/']);
+        }
+        return;
+      }
+      const result = await this.authService.signup(this.email, this.password, this.role);
+      if (result && result.needsVerification) {
+        this.verificationNotice = true;
+        this.email = '';
+        this.password = '';
+        this.confirmPassword = '';
+      }
     }
-    if (success) {
-      this.router.navigateByUrl('/');
-    }
-  }
-
-  toggleSignup() {
-    this.isSignup.update(v => !v);
-    this.adminRequestSent = false;
-    this.role = 'user';
-    this.passwordMismatch = false;
-    this.password = '';
-    this.confirmPassword = '';
   }
 }
