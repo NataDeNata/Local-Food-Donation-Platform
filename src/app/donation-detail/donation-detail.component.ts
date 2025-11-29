@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { DonationService } from '../../services/donation.service';
 import { Donation } from '../../models/donation';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'donation-detail',
@@ -14,7 +15,12 @@ import { Donation } from '../../models/donation';
 export class DonationDetailComponent implements OnInit, AfterViewInit {
   donation?: Donation;
 
-  constructor(private svc: DonationService, private route: ActivatedRoute) {}
+  constructor(
+    private readonly svc: DonationService,
+    private readonly route: ActivatedRoute,
+    public readonly authService: AuthService, // <-- inject AuthService
+    private readonly router: Router // <-- import and inject Router if not already
+  ) {}
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -42,22 +48,34 @@ export class DonationDetailComponent implements OnInit, AfterViewInit {
     }, 500); // small delay to ensure donation is fetched
   }
 
-     async accept() {
-      if (!this.donation?.id) return; // bail if donation or id is missing
-      const name = prompt('Enter your name to accept this donation:');
-      if (name && name.trim().length > 0) {
-        await this.svc.acceptDonation(this.donation.id, name.trim());
-      }
+  async accept() {
+    if (!this.donation?.id) return;
+    // For admin, auto-approve without prompt
+    if (this.authService.userRole() === 'admin') {
+      await this.svc.setStatus(this.donation.id, 'available');
+      window.location.reload();
+      return;
     }
-
-
-      async complete() {
-      if (!this.donation?.id) return;
-      if (confirm('Mark this donation as completed?')) {
-        await this.svc.completeDonation(this.donation.id);
-      }
+    const name = prompt('Enter your name to accept this donation:');
+    if (name && name.trim().length > 0) {
+      await this.svc.acceptDonation(this.donation.id, name.trim());
     }
+  }
 
+  async delete() {
+    if (!this.donation?.id) return;
+    if (confirm(`Are you sure you want to delete "${this.donation.title}"?`)) {
+      await this.svc.deleteDonation(this.donation.id);
+      this.router.navigate(['/']);
+    }
+  }
+
+  async complete() {
+    if (!this.donation?.id) return;
+    if (confirm('Mark this donation as completed?')) {
+      await this.svc.completeDonation(this.donation.id);
+    }
+  }
 
   openInGoogleMaps() {
     if (!this.donation) return;

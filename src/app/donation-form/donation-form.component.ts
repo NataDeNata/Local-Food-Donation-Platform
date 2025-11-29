@@ -120,7 +120,9 @@ export class DonationFormComponent implements AfterViewInit {
     }
 
     // Clean up phone number
-    this.model.contactPhone = this.model.contactPhone.replace(/\s|-/g, '');
+    if (this.model.contactPhone) {
+      this.model.contactPhone = this.model.contactPhone.replace(/\s|-/g, '');
+    }
 
     if (!this.model.location || this.model.location.trim().length === 0) {
       this.model.location = `Pinned at (${this.model.latitude!.toFixed(5)}, ${this.model.longitude!.toFixed(5)})`;

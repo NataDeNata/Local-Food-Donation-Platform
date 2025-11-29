@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["*"],
+    "origin": ["http://localhost:4200", "https://local-food-donation-1664b.firebaseapp.com"],
     "method": ["GET", "POST", "PUT", "HEAD", "DELETE"],
     "maxAgeSeconds": 3600,
     "responseHeader": ["Content-Type", "Authorization"]

@@ -1,5 +1,5 @@
- .title { font-size: 1.75rem; margin: 0.25rem 0 0.75rem; }
-    .detail { border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.75rem; background: #fff; display: grid; gap: 0.5rem; }
+.title { font-size: 1.75rem; margin: 0.25rem 0 0.75rem; }
+    .detail { border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.75rem; display: grid; gap: 0.5rem; }
     .row { display: grid; grid-template-columns: 160px 1fr; gap: 0.5rem; align-items: center; }
     .label { color: #6b7280; }
     .badge { padding: 0.125rem 0.5rem; border-radius: 6px; font-size: 0.75rem; text-transform: capitalize; width: fit-content; }
@@ -23,4 +23,65 @@
   max-width: 150px;
   border-radius: 4px;
   object-fit: cover;
+}
+
+/* Dark mode styles */
+:root {
+  --detail-bg: #fff;
+}
+:root.dark-mode {
+  --detail-bg: #18181b;
+}
+.detail {
+  /* ...existing code... */
+  background: var(--detail-bg);
+}
+
+/* Also force background for all children of .detail */
+:root.dark-mode .detail * {
+  background: transparent !important;
+  color: #f3f4f6 !important;
+  border-color: #27272a !important;
+}
+
+:root.dark-mode .detail .row {
+  background: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+:root.dark-mode .detail .label {
+  color: #a1a1aa !important;
+}
+
+:root.dark-mode .detail .actions {
+  background: transparent !important;
+}
+
+:root.dark-mode .badge {
+  background: #27272a !important;
+  color: #fbbf24 !important;
+}
+
+:root.dark-mode .btn,
+:root.dark-mode .btn.secondary {
+  background: #27272a !important;
+  color: #f3f4f6 !important;
+  border-color: #52525b !important;
+}
+
+:root.dark-mode .photo-gallery img {
+  border: 2px solid #27272a;
+}
+
+:root.dark-mode .empty {
+  color: #a1a1aa;
+}
+
+:root.dark-mode .link {
+  color: #a5b4fc;
+}
+
+:root.dark-mode #detailMap {
+  filter: invert(0.9) hue-rotate(180deg) brightness(0.9);
+  border-radius: 8px;
 }

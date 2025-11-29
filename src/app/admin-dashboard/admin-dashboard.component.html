@@ -1,0 +1,26 @@
+<div class="admin-dashboard">
+  <h1>Admin Dashboard</h1>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="loading">Loading...</div>
+  <table *ngIf="!loading && !error">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Pending Admin?</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td data-label="Email">{{ user.email }}</td>
+        <td data-label="Role">{{ user.role }}</td>
+        <td data-label="Pending Admin?">{{ user.pendingAdmin ? 'Yes' : 'No' }}</td>
+        <td data-label="Actions">
+          <button *ngIf="user.pendingAdmin" (click)="approveAdmin(user)">Approve as Admin</button>
+          <button (click)="removeUser(user)" style="background:#dc2626; color:#fff; margin-left:0.5rem;">Remove</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

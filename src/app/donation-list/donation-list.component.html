@@ -1,67 +1,150 @@
 <section>
   <h1 class="title">Active donations</h1>
 
-  <!-- Google Maps overview -->
-  <google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
-    <map-marker *ngFor="let m of markers"
-                [position]="m.position"
-                [label]="m.label"
-                [options]="m.options"
-                (mapClick)="goToDonation(m.id!)">
-    </map-marker>
-  </google-map>
-
-  <!-- Filters -->
-  <div class="filters">
-    <button class="pill" [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
-    <button class="pill" [class.active]="filter() === 'available'" (click)="setFilter('available')">Available</button>
-    <button class="pill" [class.active]="filter() === 'accepted'" (click)="setFilter('accepted')">Accepted</button>
-    <button class="pill" [class.active]="filter() === 'completed'" (click)="setFilter('completed')">Completed</button>
+  <div *ngIf="loading()" class="page-loading-overlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading donations...</div>
   </div>
 
-  <!-- Donation cards -->
-  <div class="grid">
-    <article *ngFor="let d of filtered()" class="card">
-      <header class="card-header">
-        <a [routerLink]="['/donation', d.id]" class="card-title">{{ d.title }}</a>
-        <span class="badge"
-              [class.available]="d.status==='available'"
-              [class.accepted]="d.status==='accepted'"
-              [class.completed]="d.status==='completed'">
-          {{ d.status }}
-        </span>
-      </header>
+  <ng-container *ngIf="!loading()">
+    <!-- Google Maps overview -->
+    <google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
+      <map-marker *ngFor="let m of markers"
+                  [position]="m.position"
+                  [label]="m.label"
+                  [options]="m.options"
+                  (mapClick)="goToDonation(m.id!)">
+      </map-marker>
+    </google-map>
 
-      <!-- Thumbnail preview -->
-      <div class="thumbnail" *ngIf="d.photos?.length">
-       <img *ngIf="d.photos?.[0]" [src]="d.photos?.[0]" alt="Donation photo" />
-      </div>
+    <!-- Filters -->
+    <div class="filters">
+      <button class="pill" [class.active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+      <button class="pill" [class.active]="filter() === 'available'" (click)="setFilter('available')">Available</button>
+      <button
+        *ngIf="authService.user()"
+        class="pill"
+        [class.active]="filter() === 'accepted'"
+        (click)="setFilter('accepted')"
+      >Accepted</button>
+      <button
+        *ngIf="authService.user()"
+        class="pill"
+        [class.active]="filter() === 'completed'"
+        (click)="setFilter('completed')"
+      >Completed</button>
+      <button
+        *ngIf="authService.user() && postedDonations().length > 0 && authService.userRole() !== 'admin'"
+        class="pill"
+        [class.active]="filter() === 'posted'"
+        (click)="setFilter('posted')"
+      >My Posts</button>
+    </div>
 
-      <p class="muted">{{ d.description }}</p>
+    <!-- Donation cards -->
+    <div class="grid">
+      <article *ngFor="let d of filtered()" class="card">
+        <header class="card-header">
+          <a [routerLink]="['/donation', d.id]" class="card-title">{{ d.title }}</a>
+          <span class="badge"
+                [class.available]="d.status==='available'"
+                [class.accepted]="d.status==='accepted'"
+                [class.completed]="d.status==='completed'">
+            {{ d.status }}
+          </span>
+        </header>
 
-      <ul class="meta">
-        <li><strong>Qty:</strong> {{ d.quantity }}</li>
-        <li>
-          <strong>Location:</strong>
-          {{ d.location }}
-          <span *ngIf="d.latitude != null && d.longitude != null">
-          ({{ d.latitude.toFixed(5) }}, {{ d.longitude.toFixed(5) }})
-        </span>
+        <!-- Thumbnail preview -->
+        <div class="thumbnail" *ngIf="d.photos?.length">
+         <img *ngIf="d.photos?.[0]" [src]="d.photos?.[0]" alt="Donation photo" />
+        </div>
 
-        </li>
-        <li><strong>Posted:</strong> {{ d.postedAt | date:'short' }}</li>
-      </ul>
+        <p class="muted">{{ d.description }}</p>
 
-      <footer class="card-actions">
-        <a [routerLink]="['/donation', d.id]" class="link">Details</a>
-        <button class="btn" *ngIf="d.status==='available'" (click)="quickAccept(d)">Accept</button>
-        <button class="btn secondary" *ngIf="d.status==='accepted'" (click)="complete(d)">Mark Completed</button>
-        <button class="btn2 danger" (click)="delete(d)">Delete</button>
-      </footer>
-    </article>
-  </div>
+        <ul class="meta">
+          <li><strong>Qty:</strong> {{ d.quantity }}</li>
+          <li>
+            <strong>Location:</strong>
+            {{ d.location }}
+            <span *ngIf="d.latitude != null && d.longitude != null">
+            ({{ d.latitude.toFixed(5) }}, {{ d.longitude.toFixed(5) }})
+          </span>
 
-  <div class="empty" *ngIf="filtered().length === 0">
-    No donations found for this filter.
-  </div>
+          </li>
+          <li><strong>Posted:</strong> {{ d.postedAt | date:'short' }}</li>
+        </ul>
+
+        <footer class="card-actions">
+          <button *ngIf="authService.isAdmin() && d.status === 'pending'" class="btn" (click)="approve(d)">Approve</button>
+          <button *ngIf="authService.isAdmin()" class="btn2" (click)="delete(d)">Delete</button>
+          <button
+            *ngIf="d.status === 'available' && (!d.acceptedByUid || d.acceptedByUid === authService.user()?.uid) && !authService.isAdmin()"
+            class="btn"
+            (click)="quickAccept(d)">
+            Accept
+          </button>
+          <button
+            *ngIf="d.status === 'accepted' && d.acceptedByUid === authService.user()?.uid && !authService.isAdmin()"
+            class="btn secondary"
+            (click)="complete(d)">
+            Complete
+          </button>
+          <!-- Show accepted by info for accepted donations not by this user -->
+          <span
+            *ngIf="d.status === 'accepted' && d.acceptedByUid && d.acceptedByUid !== authService.user()?.uid"
+            class="accepted-by-info"
+            style="margin-left:1rem; color:#888; font-size:0.95em;">
+            Accepted by: {{ d.acceptedBy || 'another user' }}
+          </span>
+          <a [routerLink]="['/donation', d.id]" class="btn secondary" style="margin-left:0.5rem;">
+            View Details
+          </a>
+        </footer>
+      </article>
+    </div>
+
+    <!-- Posted donations by the user -->
+    <div *ngIf="filter() === 'posted' && authService.user() && postedDonations().length > 0 && authService.userRole() !== 'admin'" class="grid">
+      <article *ngFor="let d of postedDonations()" class="card">
+        <header class="card-header">
+          <a [routerLink]="['/donation', d.id]" class="card-title">{{ d.title }}</a>
+          <span class="badge"
+                [class.available]="d.status==='available'"
+                [class.accepted]="d.status==='accepted'"
+                [class.completed]="d.status==='completed'"
+                [class.pending]="d.status==='pending'">
+            {{ d.status === 'pending' ? 'Under Review' : d.status }}
+          </span>
+        </header>
+        <div class="thumbnail" *ngIf="d.photos?.length">
+          <img *ngIf="d.photos?.[0]" [src]="d.photos?.[0]" alt="Donation photo" />
+        </div>
+        <p class="muted">{{ d.description }}</p>
+        <ul class="meta">
+          <li><strong>Qty:</strong> {{ d.quantity }}</li>
+          <li>
+            <strong>Location:</strong>
+            {{ d.location }}
+            <span *ngIf="d.latitude != null && d.longitude != null">
+              ({{ d.latitude.toFixed(5) }}, {{ d.longitude.toFixed(5) }})
+            </span>
+          </li>
+          <li><strong>Posted:</strong> {{ d.postedAt | date:'short' }}</li>
+        </ul>
+        <footer class="card-actions">
+          <span class="badge" *ngIf="d.status === 'pending'" style="background:#fbbf24;color:#fff;">Under Review</span>
+          <span class="badge" *ngIf="d.status === 'accepted'" style="background:#fde68a;color:#222;">Accepted</span>
+          <span class="badge" *ngIf="d.status === 'available'" style="background:#22c55e;color:#fff;">Available</span>
+          <span class="badge" *ngIf="d.status === 'completed'" style="background:#6b7280;color:#fff;">Completed</span>
+          <a [routerLink]="['/donation', d.id]" class="btn secondary" style="margin-left:0.5rem;">
+            View Details
+          </a>
+        </footer>
+      </article>
+    </div>
+
+    <div class="empty" *ngIf="filtered().length === 0">
+      No donations found for this filter.
+    </div>
+  </ng-container>
 </section>

@@ -52,9 +52,20 @@
     </div>
 
     <div class="actions">
-      <button class="btn" *ngIf="donation.status==='available'" (click)="accept()">Accept donation</button>
-      <button class="btn" (click)="openInGoogleMaps()">View on Google Maps</button>
-      <button class="btn secondary" *ngIf="donation.status==='accepted'" (click)="complete()">Mark completed</button>
+      <button class="btn"
+        *ngIf="donation.status==='available' && (!authService.isAdmin())"
+        (click)="accept()">Accept donation</button>
+      <button class="btn"
+        *ngIf="donation.status==='pending' && authService.isAdmin()"
+        (click)="accept()">Approve donation</button>
+      <button class="btn danger"
+        *ngIf="authService.isAdmin()"
+        (click)="delete()">Delete donation</button>
+      <button class="btn"
+        (click)="openInGoogleMaps()">View on Google Maps</button>
+      <button class="btn secondary"
+        *ngIf="donation.status==='accepted'"
+        (click)="complete()">Mark completed</button>
     </div>
   </div>
 </section>
