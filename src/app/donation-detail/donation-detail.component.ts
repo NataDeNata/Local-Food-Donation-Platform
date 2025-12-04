@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { DonationService } from '../../services/donation.service';
 import { Donation } from '../../models/donation';
@@ -8,18 +9,72 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'donation-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './donation-detail.component.html',
   styleUrls: ['./donation-detail.component.css']
 })
 export class DonationDetailComponent implements OnInit, AfterViewInit {
+  editMode = false;
+  editDonation: Partial<Donation> = {};
+    startEdit() {
+      if (!this.donation) return;
+      this.editMode = true;
+      this.editDonation = { ...this.donation };
+      setTimeout(() => this.initEditMap(), 300);
+    }
+
+    cancelEdit() {
+      this.editMode = false;
+      this.editDonation = {};
+    }
+
+    async saveEdit() {
+      if (!this.donation?.id) return;
+      const update: Partial<Donation> = {
+        title: this.editDonation.title,
+        description: this.editDonation.description,
+        quantity: this.editDonation.quantity,
+        location: this.editDonation.location,
+        latitude: this.editDonation.latitude,
+        longitude: this.editDonation.longitude
+      };
+      await this.svc.updateDonation(this.donation.id, update);
+      this.editMode = false;
+      this.editDonation = {};
+      window.location.reload();
+    }
+
+    initEditMap() {
+      const lat = this.editDonation.latitude || 16.4023;
+      const lng = this.editDonation.longitude || 120.5960;
+      const map = new google.maps.Map(document.getElementById('editMap') as HTMLElement, {
+        center: { lat, lng },
+        zoom: 15,
+      });
+      const marker = new google.maps.Marker({
+        position: { lat, lng },
+        map,
+        draggable: true,
+        title: this.editDonation.location || '',
+      });
+      marker.addListener('dragend', (event: any) => {
+        this.editDonation.latitude = event.latLng.lat();
+        this.editDonation.longitude = event.latLng.lng();
+      });
+      map.addListener('click', (event: any) => {
+        marker.setPosition(event.latLng);
+        this.editDonation.latitude = event.latLng.lat();
+        this.editDonation.longitude = event.latLng.lng();
+      });
+    }
   donation?: Donation;
+  zoomedPhoto: string | null = null;
 
   constructor(
     private readonly svc: DonationService,
     private readonly route: ActivatedRoute,
-    public readonly authService: AuthService, // <-- inject AuthService
-    private readonly router: Router // <-- import and inject Router if not already
+    public readonly authService: AuthService,
+    private readonly router: Router
   ) {}
 
   async ngOnInit() {
@@ -87,6 +142,26 @@ export class DonationDetailComponent implements OnInit, AfterViewInit {
       const query = encodeURIComponent(this.donation.location);
       const url = `https://www.google.com/maps/search/?q=${query}`;
       window.open(url, '_blank');
+    }
+  }
+
+  startChatWithDonator() {
+    if (!this.donation?.userId || !this.authService.user()) return;
+    const currentUser = this.authService.user();
+    if (!currentUser || !currentUser.uid || !this.donation.userId) return;
+    if (currentUser.uid === this.donation.userId) return;
+    import('../../services/chat.service').then(({ ChatService }) => {
+      const chatService = new ChatService(this['svc']['firestore']);
+      chatService.createChat([currentUser.uid, this.donation!.userId as string]).then(chatId => {
+        this.router.navigate(['/chat', chatId]);
+      });
+    });
+  }
+
+  zoomPhoto(photo: string) {
+    // Defensive: ensure photo is a string and not null/undefined
+    if (photo) {
+      this.zoomedPhoto = photo;
     }
   }
 }

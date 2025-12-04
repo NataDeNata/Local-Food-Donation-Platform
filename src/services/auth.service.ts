@@ -19,6 +19,9 @@ import { sendEmailVerification } from 'firebase/auth';
 
 export type UserRole = 'user' | 'admin';
 
+/**
+ * Service for user authentication, registration, and role management.
+ */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   user = signal<User | null>(null);
@@ -26,6 +29,11 @@ export class AuthService {
   isLoading = signal(false);
   error = signal<string | null>(null);
 
+  /**
+   * Constructor sets up authentication state listener and initializes user/role signals.
+   * @param auth AngularFire Auth instance
+   * @param firestore AngularFire Firestore instance
+   */
   constructor(private auth: Auth, private firestore: Firestore) {
     // Listen to auth state changes
     onAuthStateChanged(this.auth, async (user) => {
@@ -72,6 +80,13 @@ export class AuthService {
     });
   }
 
+  /**
+   * Registers a new user and sends a verification email.
+   * @param email User email
+   * @param password User password
+   * @param role User role (default: 'user')
+   * @returns Object indicating if verification is needed, or false on error
+   */
   async signup(email: string, password: string, role: UserRole = 'user') {
     this.isLoading.set(true);
     this.error.set(null);
@@ -98,6 +113,12 @@ export class AuthService {
     }
   }
 
+  /**
+   * Logs in a user, checks email verification, and fetches user role.
+   * @param email User email
+   * @param password User password
+   * @returns True on success, false on failure
+   */
   async login(email: string, password: string) {
     this.isLoading.set(true);
     this.error.set(null);
@@ -165,6 +186,9 @@ export class AuthService {
     }
   }
 
+  /**
+   * Logs out the current user and resets user role.
+   */
   async logout() {
     this.isLoading.set(true);
     try {
@@ -177,21 +201,38 @@ export class AuthService {
     }
   }
 
+  /**
+   * Checks if an email is already registered.
+   * @param email Email to check
+   * @returns True if email exists, false otherwise
+   */
   async checkEmailExists(email: string): Promise<boolean> {
     const auth = getAuth();
     const methods = await fetchSignInMethodsForEmail(auth, email);
     return methods && methods.length > 0;
   }
 
+  /**
+   * Sets an error message for the service.
+   * @param msg Error message
+   */
   setError(msg: string) {
     this.error.set(msg);
   }
 
+  /**
+   * Checks if the current user is an admin.
+   * @returns True if admin, false otherwise
+   */
   isAdmin() {
     return this.userRole() === 'admin';
   }
 
   // Make fetchUserRole public so it can be called from login logic
+  /**
+   * Fetches and sets the user role from Firestore for a given user ID.
+   * @param uid User ID
+   */
   public async fetchUserRole(uid: string) {
     // Only fetch user role if user record exists (i.e., after verification and first login)
     const userDoc = doc(this.firestore, 'users', uid);
@@ -205,6 +246,12 @@ export class AuthService {
   }
 
   // Add this method for instant admin signup
+  /**
+   * Instantly signs up or logs in an admin user for development purposes.
+   * @param email Admin email
+   * @param password Admin password
+   * @returns True on success, false on failure
+   */
   async instantAdminSignup(email: string, password: string) {
     this.isLoading.set(true);
     this.error.set(null);

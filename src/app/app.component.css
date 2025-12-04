@@ -95,27 +95,21 @@
 @media (max-width: 900px) {
   .nav-links {
     background: #fff !important;
-    /* ...existing code... */
   }
   .nav-links.open {
     background: #fff !important;
-    /* ...existing code... */
   }
 }
 
 /* Remove background from .nav-links in the gradient version to avoid specificity issues */
 @media (max-width: 900px) {
   .nav-links {
-    /* Remove or comment out this line to avoid conflict */
     /* background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); */
     background: none !important;
-    /* ...existing code... */
   }
   .nav-links.open {
-    /* Remove or comment out this line to avoid conflict */
     /* background: #fff !important; */
     background: none !important;
-    /* ...existing code... */
   }
 }
 
@@ -158,250 +152,57 @@
   border-top: 1px solid #e5e7eb;
 }
 
-/* --- Begin custom toggle styles --- */
-:root {
-  --scale: 2;
-  color-scheme: light;
+/* Make footer persistent at the bottom */
+html, body {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
 }
-.switch {
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: 100vh;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-height: 100vh;
+}
+
+.container, main.container {
+  flex: 1 0 auto;
+  width: 100%;
+  min-height: 0;
+}
+
+.footer {
+  flex-shrink: 0;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  margin-top: auto;
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem 1rem;
   position: relative;
-  display: inline-block;
-  width: calc(var(--scale) * 60px);
-  height: calc(var(--scale) * 34px);
+  z-index: 10;
 }
 
-.switch #input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+.footer-link {
+  color: #a21caf;
+  text-decoration: underline;
+  margin: 0 0.25em;
+  font-size: 1em;
 }
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: #2196f3;
-  transition: 0.4s;
-  z-index: 0;
-  overflow: hidden;
+.footer-link:hover {
+  color: #7c3aed;
+  text-decoration: underline;
 }
-
-.sun-moon {
-  position: absolute;
-  content: "";
-  height: calc(var(--scale) * 26px);
-  width: calc(var(--scale) * 26px);
-  left: calc(var(--scale) * 4px);
-  bottom: calc(var(--scale) * 4px);
-  background-color: yellow;
-  transition: 0.4s;
-}
-
-#input:checked + .slider {
-  background-color: black;
-}
-
-#input:focus + .slider {
-  box-shadow: 0 0 calc(var(--scale) * 1px) #2196f3;
-}
-
-#input:checked + .slider .sun-moon {
-  transform: translateX(calc(var(--scale) * 26px));
-  background-color: white;
-  animation: rotate-center 0.6s ease-in-out both;
-}
-
-.moon-dot {
-  opacity: 0;
-  transition: 0.4s;
-  fill: gray;
-}
-#input:checked + .slider .sun-moon .moon-dot {
-  opacity: 1;
-}
-
-.slider.round {
-  border-radius: calc(var(--scale) * 34px);
-}
-.slider.round .sun-moon {
-  border-radius: 50%;
-}
-
-#moon-dot-1 {
-  left: calc(var(--scale) * 10px);
-  top: calc(var(--scale) * 3px);
-  position: absolute;
-  width: calc(var(--scale) * 6px);
-  height: calc(var(--scale) * 6px);
-  z-index: 4;
-}
-
-#moon-dot-2 {
-  left: calc(var(--scale) * 2px);
-  top: calc(var(--scale) * 10px);
-  position: absolute;
-  width: calc(var(--scale) * 10px);
-  height: calc(var(--scale) * 10px);
-  z-index: 4;
-}
-
-#moon-dot-3 {
-  left: calc(var(--scale) * 16px);
-  top: calc(var(--scale) * 18px);
-  position: absolute;
-  width: calc(var(--scale) * 3px);
-  height: calc(var(--scale) * 3px);
-  z-index: 4;
-}
-
-#light-ray-1,
-#light-ray-3,
-#light-ray-2 {
-  position: absolute;
-  z-index: -1;
-  fill: white;
-  opacity: 10%;
-}
-#light-ray-1 {
-  left: calc(var(--scale) * -8px);
-  top: calc(var(--scale) * -8px);
-  width: calc(var(--scale) * 43px);
-  height: calc(var(--scale) * 43px);
-}
-#light-ray-2 {
-  left: -50%;
-  top: -50%;
-  width: calc(var(--scale) * 55px);
-  height: calc(var(--scale) * 55px);
-}
-#light-ray-3 {
-  left: calc(var(--scale) * -18px);
-  top: calc(var(--scale) * -18px);
-  width: calc(var(--scale) * 60px);
-  height: calc(var(--scale) * 60px);
-}
-
-.cloud-light,
-.cloud-dark {
-  position: absolute;
-  animation-name: cloud-move;
-  animation-duration: 6s;
-  animation-iteration-count: infinite;
-}
-.cloud-light {
-  fill: #eee;
-}
-.cloud-dark {
-  fill: #ccc;
-  animation-delay: 1s;
-}
-
-#cloud-1 {
-  left: calc(var(--scale) * 30px);
-  top: calc(var(--scale) * 15px);
-  width: calc(var(--scale) * 40px);
-}
-#cloud-2 {
-  left: calc(var(--scale) * 44px);
-  top: calc(var(--scale) * 10px);
-  width: calc(var(--scale) * 20px);
-}
-#cloud-3 {
-  left: calc(var(--scale) * 18px);
-  top: calc(var(--scale) * 24px);
-  width: calc(var(--scale) * 30px);
-}
-#cloud-4 {
-  left: calc(var(--scale) * 36px);
-  top: calc(var(--scale) * 18px);
-  width: calc(var(--scale) * 40px);
-}
-#cloud-5 {
-  left: calc(var(--scale) * 48px);
-  top: calc(var(--scale) * 14px);
-  width: calc(var(--scale) * 20px);
-}
-#cloud-6 {
-  left: calc(var(--scale) * 22px);
-  top: calc(var(--scale) * 26px);
-  width: calc(var(--scale) * 30px);
-}
-
-@keyframes cloud-move {
-  0% {
-    transform: translateX(0px);
-  }
-  40% {
-    transform: translateX(calc(var(--scale) * 4px));
-  }
-  80% {
-    transform: translateX(calc(var(--scale) * -4px));
-  }
-  100% {
-    transform: translateX(0px);
-  }
-}
-
-.stars {
-  transform: translateY(calc(var(--scale) * -32px));
-  opacity: 0;
-  transition: 0.4s;
-}
-
-.star {
-  fill: white;
-  position: absolute;
-  transition: 0.4s;
-  animation-name: star-twinkle;
-  animation-duration: 2s;
-  animation-iteration-count: infinite;
-}
-
-#input:checked + .slider .stars {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-#star-1 {
-  width: calc(var(--scale) * 20px);
-  top: calc(var(--scale) * 2px);
-  left: calc(var(--scale) * 3px);
-  animation-delay: 0.3s;
-}
-#star-2 {
-  width: calc(var(--scale) * 6px);
-  top: calc(var(--scale) * 16px);
-  left: calc(var(--scale) * 3px);
-}
-#star-3 {
-  width: calc(var(--scale) * 12px);
-  top: calc(var(--scale) * 20px);
-  left: calc(var(--scale) * 10px);
-  animation-delay: 0.6s;
-}
-#star-4 {
-  width: calc(var(--scale) * 18px);
-  top: calc(var(--scale) * 0px);
-  left: calc(var(--scale) * 18px);
-  animation-delay: 1.3s;
-}
-
-@keyframes star-twinkle {
-  0% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1.2);
-  }
-  80% {
-    transform: scale(0.8);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* --- End custom toggle styles --- */
 
 .theme-bs-toggle {
   display: flex;
@@ -467,9 +268,10 @@
 	transition-timing-function: cubic-bezier(0.05,0.76,0.06,0.86);
 }
 .switch__icon--dark {
-	opacity: 0;
-	transform: translateX(-0.75em) rotate(30deg) scale(0.75);
-	transition-timing-function: cubic-bezier(0.76,0.05,0.86,0.06);
+	opacity: 1;
+	display: inline-block;
+	vertical-align: middle;
+	transition: opacity 0.2s, transform 0.2s;
 }
 .switch__input {
 	background-color: hsl(210,90%,70%);
@@ -665,7 +467,7 @@
 :root.dark-mode .nav-links.open {
   background: #2d0a4b !important;
   color: #f3f4f6 !important;
-  border-top: 1px solid #a21caf;
+  /* border-top: 1px solid #a21caf; */ /* Remove or comment out this line */
 }
 
 @media (max-width: 900px) {
@@ -674,8 +476,7 @@
     /* Make sure no background is set here */
   }
   .nav-links.open {
-    /* ...existing code... */
-    /* Make sure no background is set here */
+  
   }
 }
 
@@ -747,7 +548,7 @@
 :root.dark-mode .nav-links.open {
   background: rgba(45,10,75,0.96) !important; /* semi-opaque dark purple */
   color: #f3f4f6 !important;
-  border-top: 1px solid #a21caf;
+  /* border-top: 1px solid #a21caf; */ /* Remove or comment out this line */
 }
 
 @media (max-width: 900px) {
@@ -758,4 +559,264 @@
   .nav-links.open {
   
   }
+}
+
+/* --- FORCE chat sidebar dark mode, override all inline and element styles --- */
+:root.dark-mode .chat-sidebar,
+:root.dark-mode .chat-sidebar *,
+:root.dark-mode .chat-sidebar .chat-list-sidebar,
+:root.dark-mode .chat-sidebar .chat-list-sidebar *,
+:root.dark-mode .chat-sidebar[style],
+:root.dark-mode .chat-sidebar .chat-list-sidebar[style] {
+  background: #181028 !important;
+  background-color: #181028 !important;
+  color: #f3f4f6 !important;
+  border-color: #312e81 !important;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.32) !important;
+}
+
+/* --- ULTIMATE OVERRIDE for chat sidebar dark mode --- */
+:root.dark-mode .chat-sidebar,
+:root.dark-mode .chat-sidebar *,
+:root.dark-mode .chat-sidebar .chat-list-sidebar,
+:root.dark-mode .chat-sidebar .chat-list-sidebar *,
+:root.dark-mode .chat-sidebar[style],
+:root.dark-mode .chat-sidebar .chat-list-sidebar[style],
+:root.dark-mode .chat-sidebar > *,
+:root.dark-mode .chat-sidebar .chat-list-sidebar > * {
+  background: #181028 !important;
+  background-color: #181028 !important;
+  color: #f3f4f6 !important;
+  border-color: #312e81 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Remove all backgrounds from inline styles (target style attribute directly) */
+:root.dark-mode .chat-sidebar[style],
+:root.dark-mode .chat-sidebar .chat-list-sidebar[style] {
+  background: #181028 !important;
+  background-color: #181028 !important;
+}
+
+/* Remove background from all elements inside chat sidebar (last resort) */
+:root.dark-mode .chat-sidebar * {
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* FINAL: Force chat sidebar dark mode, override inline background */
+:root.dark-mode .chat-sidebar {
+  background: #181028 !important;
+  background-color: #181028 !important;
+  color: #f3f4f6 !important;
+  border-color: #312e81 !important;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.32) !important;
+}
+
+/* --- CRITICAL: Remove inline background on chat-sidebar in dark mode --- */
+:root.dark-mode .chat-sidebar[style] {
+  /* Remove the inline background set by Angular template */
+  background: #181028 !important;
+  background-color: #181028 !important;
+  /* Remove any inline box-shadow if needed */
+  box-shadow: 2px 0 16px rgba(0,0,0,0.32) !important;
+  color: #f3f4f6 !important;
+  border-color: #312e81 !important;
+}
+
+/* Remove background from all direct children (header, content) */
+:root.dark-mode .chat-sidebar > * {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+/* Remove background from all divs inside chat-sidebar */
+:root.dark-mode .chat-sidebar div,
+:root.dark-mode .chat-sidebar div * {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+/* Remove background from chat-list-sidebar and its children */
+:root.dark-mode .chat-list-sidebar,
+:root.dark-mode .chat-list-sidebar * {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+/* Remove border-bottom color for divider lines in chat list */
+:root.dark-mode .chat-sidebar [style*="border-bottom:1px solid #eee"] {
+  border-bottom: 1px solid #312e81 !important;
+}
+
+/* Muted/placeholder text */
+:root.dark-mode .chat-sidebar ::placeholder,
+:root.dark-mode .chat-sidebar [style*="color:#888"],
+:root.dark-mode .chat-sidebar [style*="color:#666"] {
+  color: #bdb7d6 !important;
+}
+
+/* Chat sidebar overlay */
+:root.dark-mode .chat-sidebar-overlay {
+  background: rgba(0,0,0,0.45) !important;
+}
+
+/* Unread badge */
+:root.dark-mode .chat-notif-badge {
+  background: #a21caf !important;
+  color: #fff !important;
+}
+
+/* Remove background-image and box-shadow from all elements inside chat sidebar */
+:root.dark-mode .chat-sidebar *,
+:root.dark-mode .chat-list-sidebar * {
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+.chat-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.3em;
+  transition: all 0.3s ease;
+}
+
+.chat-btn:hover {
+  transform: scale(1.1);
+}
+
+.chat-notif-badge {
+  position: absolute;
+  top: -0.2em;
+  right: -0.2em;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.75em;
+  padding: 0.2em 0.5em;
+  min-width: 1.5em;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Ensure nav-links items are properly aligned */
+.nav-links {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-email {
+  color: #fff;
+  font-size: 0.9em;
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .user-section {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+  
+  .user-email {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .logout-btn {
+    width: 100%;
+  }
+  
+  .chat-btn {
+    justify-self: center;
+  }
+}
+
+/* Fix switch alignment in nav */
+.switch {
+  margin-left: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  height: 2.2em;
+  vertical-align: middle;
+  position: relative;
+}
+
+.switch__input {
+  margin: 0;
+  vertical-align: middle;
+}
+
+.switch__icon {
+  margin-left: 0.3em;
+  margin-right: 0.1em;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+  .switch {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    align-self: flex-start;
+    height: 2.2em;
+  }
+}
+
+/* Fix for moon icon visibility in switch */
+.switch__icon--dark {
+  opacity: 1;
+  margin-top: 5px;
+  margin-left: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.switch__icon--light {
+  opacity: 1;
+  margin-top: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Hide/show icons based on checked state using adjacent sibling selector */
+.switch__input:not(:checked) ~ .switch__icon--dark {
+  opacity: 0;
+  transform: translateX(-0.75em) rotate(30deg) scale(0.75);
+  pointer-events: none;
+}
+
+.switch__input:checked ~ .switch__icon--light {
+  opacity: 0;
+  transform: translateX(-0.75em) rotate(-30deg) scale(0.75);
+  pointer-events: none;
+}
+
+.switch__input:checked ~ .switch__icon--dark {
+  opacity: 1;
+  transform: translateX(-1.5em);
+  pointer-events: auto;
 }

@@ -94,13 +94,25 @@
       </div>
       <div *ngIf="verificationNotice" class="info-message" style="color:#a21caf; margin-bottom:1rem;">
         A verification email has been sent. Please check your inbox and verify your email before logging in.<br>
-        <b>Your account will be activated after verification.</b>
+        <b>Your account will be activated after verification. (Check spams if not on inbox)</b>
       </div>
 
       <button
         type="submit"
         class="btn"
-        [disabled]="authService.isLoading() || (isSignupMode() && role === 'admin' && !isInstantAdminSignup && adminRequestSent)"
+        [disabled]="
+          authService.isLoading() ||
+          (
+            isSignupMode() &&
+            role === 'admin' &&
+            (
+              !email.trim() ||
+              !password.trim() ||
+              !confirmPassword.trim() ||
+              adminRequestSent
+            )
+          )
+        "
       >
         {{ authService.isLoading() ? 'Loading...' : (
           isSignupMode()

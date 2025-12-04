@@ -1,42 +1,61 @@
 .admin-approvals {
-  max-width: 800px;
-  margin: 2rem auto;
+  padding: 2rem 1rem;
+  max-width: 900px;
+  margin: 0 auto;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(109, 40, 217, 0.08);
-  padding: 2rem;
 }
-h1 {
-  color: #6d28d9;
+.admin-approvals h1 {
   margin-bottom: 1.5rem;
+  font-size: 2rem;
+  text-align: center;
+  color: #6d28d9;
 }
-table {
+.admin-approvals table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
-th, td {
-  padding: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
+.admin-approvals th,
+.admin-approvals td {
+  padding: 0.75rem 1rem;
   text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #e5e7eb;
 }
-th {
-  background: #f3e8ff;
-  color: #6d28d9;
+.admin-approvals th {
+  background: #f3f4f6;
+  font-weight: 700;
+  color: #4b5563;
 }
-button {
-  background: #6d28d9;
-  color: #fff;
+.admin-approvals td {
+  color: #22223b;
+  font-size: 1em;
+}
+.admin-approvals tr:last-child td {
+  border-bottom: none;
+}
+.admin-approvals button {
+  margin-right: 0.5em;
+  padding: 0.4em 1em;
+  border-radius: 5px;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
+  background: #22c55e;
+  color: #fff;
   font-weight: 600;
-  margin-right: 0.5rem;
+  cursor: pointer;
   transition: background 0.2s;
 }
-button:hover {
-  background: #7c3aed;
+.admin-approvals button:last-child {
+  background: #ef4444;
+  margin-right: 0;
+}
+.admin-approvals button:hover {
+  opacity: 0.9;
 }
 
 :host-context(.dark-mode) .admin-approvals {
@@ -88,54 +107,37 @@ button:hover {
   }
 }
 
-@media (max-width: 600px) {
-  .admin-approvals {
-    padding: 0.5rem;
-    margin: 1rem 0.25rem;
-    box-shadow: none;
-  }
-  table,
-  thead,
-  tbody,
-  th,
-  td,
-  tr {
+@media (max-width: 700px) {
+  .admin-approvals table,
+  .admin-approvals thead,
+  .admin-approvals tbody,
+  .admin-approvals th,
+  .admin-approvals td,
+  .admin-approvals tr {
     display: block;
     width: 100%;
   }
-  thead {
+  .admin-approvals thead tr {
     display: none;
   }
-  tr {
-    margin-bottom: 1.25rem;
-    border-bottom: 2px solid #e5e7eb;
-    background: #fff;
+  .admin-approvals tr {
+    margin-bottom: 1.2em;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(34,197,94,0.08);
-    padding: 0.5rem 0.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: #fff;
+    padding: 0.5em 0;
   }
-  td {
-    padding: 0.5rem 0.25rem;
-    text-align: left;
+  .admin-approvals td {
+    border: none;
+    padding: 0.7em 1em;
     position: relative;
+    text-align: left;
   }
-  td:before {
-    content: attr(data-label);
-    font-weight: 700;
-    color: #16a34a;
+  .admin-approvals td[data-label]:before {
+    content: attr(data-label) ": ";
+    font-weight: bold;
+    color: #6b7280;
     display: block;
-    margin-bottom: 0.25rem;
-    font-size: 0.95em;
-  }
-  button {
-    width: 100%;
-    margin: 0.25rem 0;
-  }
-  :host-context(.dark-mode) tr {
-    background: #134e1e;
-    box-shadow: 0 2px 8px rgba(34,197,94,0.18);
-  }
-  :host-context(.dark-mode) td:before {
-    color: #bbf7d0;
+    margin-bottom: 0.2em;
   }
 }

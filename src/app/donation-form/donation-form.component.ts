@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,6 +27,7 @@ export class DonationFormComponent implements AfterViewInit {
   };
 
   selectedFiles: File[] = [];
+  posting = signal(false); // <-- add this signal
 
   constructor(private svc: DonationService, private router: Router) {}
 
@@ -119,26 +120,32 @@ export class DonationFormComponent implements AfterViewInit {
       return;
     }
 
-    // Clean up phone number
-    if (this.model.contactPhone) {
-      this.model.contactPhone = this.model.contactPhone.replace(/\s|-/g, '');
-    }
+    if (this.posting()) return; // Prevent double submit
+    this.posting.set(true);
+    try {
+      // Clean up phone number
+      if (this.model.contactPhone) {
+        this.model.contactPhone = this.model.contactPhone.replace(/\s|-/g, '');
+      }
 
-    if (!this.model.location || this.model.location.trim().length === 0) {
-      this.model.location = `Pinned at (${this.model.latitude!.toFixed(5)}, ${this.model.longitude!.toFixed(5)})`;
-    }
+      if (!this.model.location || this.model.location.trim().length === 0) {
+        this.model.location = `Pinned at (${this.model.latitude!.toFixed(5)}, ${this.model.longitude!.toFixed(5)})`;
+      }
 
-    // Upload photos via DonationService
-    const urls: string[] = [];
-    for (const file of this.selectedFiles) {
-      const downloadUrl = await this.svc.uploadPhoto(file);
-      urls.push(downloadUrl);
-    }
-    this.model.photos = urls;
+      // Upload photos via DonationService
+      const urls: string[] = [];
+      for (const file of this.selectedFiles) {
+        const downloadUrl = await this.svc.uploadPhoto(file);
+        urls.push(downloadUrl);
+      }
+      this.model.photos = urls;
 
-    // Save donation to Firestore
-    await this.svc.addDonation(this.model);
-    this.router.navigateByUrl('/');
+      // Save donation to Firestore
+      await this.svc.addDonation(this.model);
+      this.router.navigateByUrl('/');
+    } finally {
+      this.posting.set(false);
+    }
   }
 
   reset() {

@@ -9,18 +9,24 @@
         <th>Description</th>
         <th>Contact</th>
         <th>Posted At</th>
-        <th>Actions</th>
+        <th style="text-align:center;">Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let d of pendingDonations">
         <td data-label="Title">{{ d.title }}</td>
         <td data-label="Description">{{ d.description }}</td>
-        <td data-label="Contact">{{ d.contactName }}<br>{{ d.contactPhone }}</td>
+        <td data-label="Contact">
+          <div>{{ d.contactName }}</div>
+          <div>{{ d.contactPhone }}</div>
+        </td>
         <td data-label="Posted At">{{ d.postedAt | date:'short' }}</td>
-        <td data-label="Actions">
+        <td data-label="Actions" style="text-align:center;">
           <button (click)="approve(d)">Approve</button>
-          <button (click)="reject(d)">Reject</button>
+          <br><br>
+          <button (click)="reject(d)" style="background-color: rgb(224, 28, 28);">Reject</button>
+          <br><br>
+          <a [routerLink]="['/donation', d.id]" class="btn secondary" style="margin-top:0.5em;">View Details</a>
         </td>
       </tr>
     </tbody>
