@@ -1,0 +1,25 @@
+<section *ngIf="donation; else notFound">
+  <a routerLink="/" class="link">&larr; Back to list</a>
+  <h1 class="title">{{ donation.title }}</h1>
+  <div class="detail">
+    <div class="row"><span class="label">Description:</span> {{ donation.description }}</div>
+    <div class="row"><span class="label">Quantity:</span> {{ donation.quantity }}</div>
+    <div class="row"><span class="label">Barangay:</span> {{ donation.barangay }}</div>
+    <div class="row"><span class="label">Contact:</span> {{ donation.contactName }} — {{ donation.contactPhone }}</div>
+    <div class="row"><span class="label">Status:</span> {{ donation.status }}</div>
+    <div class="row"><span class="label">Posted At:</span> {{ donation.postedAt | date:'short' }}</div>
+    <div class="row" *ngIf="donation.photos?.length">
+      <span class="label">Photos:</span>
+      <div class="photo-gallery">
+        <img *ngFor="let photo of donation.photos"
+             [src]="photo"
+             alt="Donation photo"
+             style="max-width:320px;max-height:320px;margin:0.5em;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.12);" />
+      </div>
+    </div>
+  </div>
+</section>
+<ng-template #notFound>
+  <p class="empty">Donation not found.</p>
+  <a routerLink="/" class="link">Back to list</a>
+</ng-template>

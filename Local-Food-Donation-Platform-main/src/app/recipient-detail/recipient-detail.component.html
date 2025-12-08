@@ -1,0 +1,35 @@
+<section>
+  <a routerLink="/" class="link">&larr; Back to list</a>
+  <h1 class="title">Recipient Details</h1>
+  <div *ngIf="recipientUid" style="margin-bottom:1em;">
+    <strong>Recipient UID:</strong> {{ recipientUid }}
+  </div>
+  <div *ngIf="loading">Loading accepted donations...</div>
+  <div *ngIf="!loading && donations.length === 0" style="color:#888;">No accepted donations found for this recipient.</div>
+  <table *ngIf="!loading && donations.length > 0" style="width:100%;max-width:900px;margin:auto;border-collapse:collapse;">
+    <thead>
+      <tr style="background:#f3f4f6;">
+        <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Title</th>
+        <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Description</th>
+        <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Quantity</th>
+        <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Barangay</th>
+        <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Status</th>
+        <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Accepted At</th>
+        <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">View</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of donations">
+        <td style="padding:0.7em 1em;border:1px solid #e5e7eb;">{{ d.title }}</td>
+        <td style="padding:0.7em 1em;border:1px solid #e5e7eb;">{{ d.description }}</td>
+        <td style="padding:0.7em 1em;border:1px solid #e5e7eb;">{{ d.quantity }}</td>
+        <td style="padding:0.7em 1em;border:1px solid #e5e7eb;">{{ d.barangay }}</td>
+        <td style="padding:0.7em 1em;border:1px solid #e5e7eb;">{{ d.status }}</td>
+        <td style="padding:0.7em 1em;border:1px solid #e5e7eb;">{{ d.postedAt | date:'short' }}</td>
+        <td style="padding:0.7em 1em;border:1px solid #e5e7eb;">
+          <a [routerLink]="['/post', d.id]" class="btn secondary">View Post</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

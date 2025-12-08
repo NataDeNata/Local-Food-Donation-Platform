@@ -1,0 +1,102 @@
+<form #donationForm="ngForm" (ngSubmit)="submit(donationForm)" novalidate>
+
+  <!-- Warning message for pinning outside boundary -->
+  <div *ngIf="barangayWarning()" style="position:relative;z-index:10;margin-bottom:10px;">
+    <div class="error" style="background:#ffeaea;color:#b91c1c;padding:0.7em 1.2em;border-radius:8px;border:1px solid #fca5a5;font-weight:bold;text-align:center;">
+      {{ barangayWarning() }}
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Title</label>
+    <textarea name="title" [(ngModel)]="model.title" #title="ngModel" required></textarea>
+    <div class="error" *ngIf="donationForm.submitted && title.invalid">
+      Title is required
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Description</label>
+    <textarea name="description" [(ngModel)]="model.description" #description="ngModel" required></textarea>
+    <div class="error" *ngIf="donationForm.submitted && description.invalid">
+      Description is required
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Quantity</label>
+    <input type="number" name="quantity" [(ngModel)]="model.quantity" #quantity="ngModel" required min="1" />
+    <div class="error" *ngIf="donationForm.submitted && quantity.invalid">
+      Quantity must be at least 1
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Contact Name <span style="color:#888;font-size:0.95em;">(optional)</span></label>
+    <input name="contactName" [(ngModel)]="model.contactName" #contactName="ngModel" />
+  </div>
+
+  <div class="field">
+    <label>Contact Phone <span style="color:#888;font-size:0.95em;">(optional)</span></label>
+    <input name="contactPhone"
+           [(ngModel)]="model.contactPhone"
+           #contactPhone="ngModel"
+           pattern="^[0-9\s-]{10,}$" />
+  </div>
+
+  <!-- Photo upload -->
+  <div class="field">
+    <label>Photos</label>
+    <input type="file" (change)="onFileSelected($event)" multiple />
+    <div class="preview" *ngIf="selectedFiles.length > 0">
+      <p>Selected photos:</p>
+      <ul>
+        <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+      </ul>
+    </div>
+  </div>
+
+    <!-- Barangay selection -->
+  <div class="field">
+    <label>Select Barangay</label>
+    <select name="barangay"
+            #barangaySelect
+            [(ngModel)]="selectedBarangayName"
+            (change)="onBarangayChange(barangaySelect)"
+            required
+            [disabled]="barangayList.length === 1">
+      <option value="" disabled selected>Select a barangay</option>
+      <option *ngFor="let b of barangayList" [value]="b">{{ b }}</option>
+    </select>
+    <div class="error" *ngIf="donationForm.submitted && !selectedBarangayName">
+      Barangay is required
+    </div>
+  </div>
+
+
+  <!-- Map container with warning above -->
+  <div style="position:relative;">
+    <div *ngIf="barangayWarning()" style="position:absolute;top:-48px;left:0;width:100%;z-index:1000;">
+      <div class="error" style="background:#ffeaea;color:#b91c1c;padding:0.7em 1.2em;border-radius:8px;border:1px solid #fca5a5;font-weight:bold;text-align:center;">
+        {{ barangayWarning() }}
+      </div>
+    </div>
+    <div id="map" style="height:400px; width:100%; margin-top:20px;"
+         [class.disabled]="!selectedBarangay"></div>
+    <div *ngIf="!selectedBarangay" class="map-overlay" style="z-index:999;">
+      <div class="overlay-content">
+        <span style="color: red;">Please select a barangay first.</span>
+      </div>
+    </div>
+  </div>
+
+  <button
+    class="btn"
+    type="submit"
+    [disabled]="posting()"
+  >
+    <span *ngIf="posting()">Posting...</span>
+    <span *ngIf="!posting()">Post Donation</span>
+  </button>
+  <button class="btn" type="button" (click)="reset()">Reset</button>
+</form>

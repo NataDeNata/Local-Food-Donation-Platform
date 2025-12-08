@@ -1,0 +1,842 @@
+@media (max-width: 900px) {
+  .nav-links {
+    display: none !important;
+  }
+  .nav-links.open {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100vw;
+    background: #fff;
+    z-index: 1000;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  :root.dark-mode .nav-links.open {
+    background: #2d0a4b !important;
+    color: #f3f4f6 !important;
+  }
+}
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.header {
+  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+  color: #fff;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.2);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.brand:hover {
+  opacity: 0.9;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.link,
+.button,
+.logout-btn {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #fff !important;
+  text-decoration: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(34,197,94,0.15);
+  border: none;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.link:hover,
+.button:hover,
+.logout-btn:hover {
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+  color: #fff !important;
+  box-shadow: 0 4px 16px rgba(34,197,94,0.25);
+  transform: translateY(-2px);
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.theme-bs-toggle,
+.switch {
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+}
+
+/* Ensure no other background is set for nav-links in light or dark mode except in the intended media query and dark override */
+@media (max-width: 900px) {
+  .nav-links {
+    background: #fff !important;
+  }
+  .nav-links.open {
+    background: #fff !important;
+  }
+}
+
+/* Remove background from .nav-links in the gradient version to avoid specificity issues */
+@media (max-width: 900px) {
+  .nav-links {
+    /* background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); */
+    background: none !important;
+  }
+  .nav-links.open {
+    /* background: #fff !important; */
+    background: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 0.5rem;
+  }
+  .nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    max-width: 100vw;
+  }
+  .nav-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .link,
+  .button,
+  .logout-btn {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+  }
+  .theme-bs-toggle,
+  .switch {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    align-self: center;
+  }
+}
+
+.footer {
+  margin-top: 3rem;
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Make footer persistent at the bottom */
+html, body {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: 100vh;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-height: 100vh;
+}
+
+.container, main.container {
+  flex: 1 0 auto;
+  width: 100%;
+  min-height: 0;
+}
+
+.footer {
+  flex-shrink: 0;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  margin-top: auto;
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-link {
+  color: #a21caf;
+  text-decoration: underline;
+  margin: 0 0.25em;
+  font-size: 1em;
+}
+.footer-link:hover {
+  color: #7c3aed;
+  text-decoration: underline;
+}
+
+.theme-bs-toggle {
+  display: flex;
+  align-items: center;
+  min-width: 70px;
+}
+
+.theme-bs-toggle .form-check-input {
+  width: 2.5em;
+  height: 1.3em;
+  margin-right: 0.5em;
+  cursor: pointer;
+  border: 2px solid #a78bfa;
+  background-color: #f3e8ff;
+  transition: background 0.3s, border 0.3s;
+}
+
+.theme-bs-toggle .form-check-input:checked {
+  background-color: #6d28d9;
+  border-color: #6d28d9;
+}
+
+.theme-bs-toggle .form-check-label {
+  font-size: 1.3em;
+  user-select: none;
+  color: #6d28d9;
+  transition: color 0.3s;
+}
+
+:root.dark-mode .theme-bs-toggle .form-check-label {
+  color: #a78bfa;
+}
+
+:root.dark-mode .theme-bs-toggle .form-check-input {
+  background-color: #312e81;
+  border-color: #a78bfa;
+}
+
+.switch {
+	margin-left: 0.5rem;
+	position: relative;
+}
+.switch__icon,
+.switch__input {
+	display: block;
+}
+.switch__icon {
+	position: absolute;
+	top: 0.375em;
+	right: 0.375em;
+	width: 0.75em;
+	height: 0.75em;
+	transition:
+		opacity 0.15s,
+		transform 0.15s;
+}
+.switch__icon polyline {
+	transition: stroke-dashoffset 0.15s;
+}
+.switch__icon--light,
+.switch__icon--light polyline {
+	transition-delay: 0.15s;
+	transition-timing-function: cubic-bezier(0.05,0.76,0.06,0.86);
+}
+.switch__icon--dark {
+	opacity: 1;
+	display: inline-block;
+	vertical-align: middle;
+	transition: opacity 0.2s, transform 0.2s;
+}
+.switch__input {
+	background-color: hsl(210,90%,70%);
+	border-radius: 0.75em;
+	box-shadow:
+		0 0 0 0.125em hsla(223,90%,50%,0),
+		0.125em 0.125em 0.25em hsla(223,90%,10%,0.2);
+	outline: transparent;
+	position: relative;
+	width: 3em;
+	height: 1.5em;
+	-webkit-appearance: none;
+	appearance: none;
+	-webkit-tap-highlight-color: transparent;
+	transition:
+		background-color 0.3s cubic-bezier(0.76,0.05,0.24,0.95),
+		box-shadow 0.15s linear;
+}
+.switch__input:focus-visible {
+	box-shadow:
+		0 0 0 0.125em hsl(223,90%,50%),
+		0.125em 0.125em 0.25em hsla(223,90%,10%,0.2);
+}
+.switch__input:before,
+.switch__input:after {
+	content: "";
+	display: block;
+	position: absolute;
+}
+.switch__input:before {
+	background-color: hsl(50,90%,50%);
+	border-radius: inherit;
+	mask-image: linear-gradient(120deg,hsl(0,0%,0%) 20%,hsla(0,0%,0%,0) 80%);
+	-webkit-mask-image: linear-gradient(120deg,hsl(0,0%,0%) 20%,hsla(0,0%,0%,0) 80%);
+	inset: 0;
+	transition: background-color 0.3s cubic-bezier(0.76,0.05,0.24,0.95);
+}
+.switch__input:after {
+	background-color: hsl(0,0%,100%);
+	border-radius: 50%;
+	box-shadow: 0.05em 0.05em 0.05em hsla(223,90%,10%,0.1);
+	top: 0.125em;
+	left: 0.125em;
+	width: 1.25em;
+	height: 1.25em;
+	transition:
+		background-color 0.3s cubic-bezier(0.76,0.05,0.24,0.95),
+		transform 0.3s cubic-bezier(0.76,0.05,0.24,0.95);
+	z-index: 1;
+}
+.switch__input:checked {
+	background-color: hsl(290,90%,40%);
+}
+.switch__input:checked:before {
+	background-color: hsl(220,90%,40%);
+}
+.switch__input:checked:after {
+	background-color: hsl(0,0%,0%);
+	transform: translateX(1.5em);
+}
+.switch__input:checked ~ .switch__icon--light,
+.switch__input:checked ~ .switch__icon--light polyline {
+	transition-delay: 0s;
+	transition-timing-function: cubic-bezier(0.76,0.05,0.86,0.06);
+}
+.switch__input:checked ~ .switch__icon--light {
+	opacity: 0;
+	transform: translateX(-0.75em) rotate(-30deg) scale(0.75);
+}
+.switch__input:checked ~ .switch__icon--light polyline {
+	stroke-dashoffset: 1.5;
+}
+.switch__input:checked ~ .switch__icon--dark {
+	opacity: 1;
+	transform: translateX(-1.5em);
+	transition-delay: 0.15s;
+	transition-timing-function: cubic-bezier(0.05,0.76,0.06,0.86);
+}
+.switch__sr {
+	overflow: hidden;
+	position: absolute;
+	width: 1px;
+	height: 1px;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: auto;
+  z-index: 30;
+}
+
+.hamburger span {
+  display: block;
+  height: 4px;
+  width: 28px;
+  margin: 5px 0;
+  background: #6b7280;
+  border-radius: 2px;
+  transition: background 0.3s, transform 0.3s, opacity 0.3s;
+}
+
+.hamburger span.open {
+  background: #a21caf; /* purple-700 */
+}
+
+.hamburger span.open:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.hamburger span.open:nth-child(2) {
+  opacity: 0;
+}
+.hamburger span.open:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+@media (max-width: 900px) {
+  .hamburger {
+    display: flex;
+  }
+  .nav-links {
+    position: absolute;
+    top: 64px;
+    right: 0;
+    left: 0;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 1rem 0.5rem;
+    z-index: 20;
+    display: none;
+    box-shadow: 0 8px 24px rgba(34,197,94,0.08);
+  }
+  .nav-links.open {
+    display: flex;
+  }
+  .nav {
+    position: relative;
+  }
+}
+
+/* Dark mode background for header/nav */
+:root.dark-mode .header,
+:root.dark-mode .nav,
+:root.dark-mode .nav-links.open {
+  background: #2d0a4b !important;
+  color: #f3f4f6 !important;
+}
+
+/* Ensure hamburger is visible on small screens */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+@media (max-width: 900px) {
+  .hamburger {
+    display: block;
+  }
+  .nav-links {
+    display: none;
+    background: #fff !important;
+  }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: #fff !important;
+    z-index: 1000;
+    padding: 1rem;
+  }
+  .nav {
+    position: relative;
+  }
+}
+
+:root.dark-mode .nav-links,
+:root.dark-mode .nav-links.open {
+  background: #2d0a4b !important;
+  color: #f3f4f6 !important;
+  /* border-top: 1px solid #a21caf; */ /* Remove or comment out this line */
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    /* ...existing code... */
+    /* Make sure no background is set here */
+  }
+  .nav-links.open {
+  
+  }
+}
+
+/* --- Begin loading overlay styles --- */
+.page-loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.85);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+:root.dark-mode .page-loading-overlay {
+  background: rgba(30,41,59,0.85);
+}
+
+.spinner {
+  border: 6px solid #e5e7eb;
+  border-top: 6px solid #22c55e;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+.loading-text {
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+:root.dark-mode .loading-text {
+  color: #bbf7d0;
+}
+
+/* Remove all background from .nav-links and .nav-links.open in all media queries */
+@media (max-width: 900px) {
+  .nav-links {
+    background: transparent !important;
+    /* ...existing code... */
+  }
+  .nav-links.open {
+    background: transparent !important;
+    /* ...existing code... */
+  }
+}
+
+/* Remove all conflicting backgrounds and set correct backgrounds for nav-links on mobile */
+@media (max-width: 900px) {
+  .nav-links,
+  .nav-links.open {
+    background: #fff !important;
+    /* ...existing code... */
+  }
+}
+
+/* Place this at the very end of your CSS file for highest specificity */
+:root.dark-mode .nav-links,
+:root.dark-mode .nav-links.open {
+  background: rgba(45,10,75,0.96) !important; /* semi-opaque dark purple */
+  color: #f3f4f6 !important;
+  /* border-top: 1px solid #a21caf; */ /* Remove or comment out this line */
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    /* ...existing code... */
+    /* Make sure no background is set here */
+  }
+  .nav-links.open {
+  
+  }
+}
+
+/* --- FORCE chat sidebar dark mode, override all inline and element styles --- */
+:root.dark-mode .chat-sidebar,
+:root.dark-mode .chat-sidebar *,
+:root.dark-mode .chat-sidebar .chat-list-sidebar,
+:root.dark-mode .chat-sidebar .chat-list-sidebar *,
+:root.dark-mode .chat-sidebar[style],
+:root.dark-mode .chat-sidebar .chat-list-sidebar[style] {
+  background: #181028 !important;
+  background-color: #181028 !important;
+  color: #f3f4f6 !important;
+  border-color: #312e81 !important;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.32) !important;
+}
+
+/* --- ULTIMATE OVERRIDE for chat sidebar dark mode --- */
+:root.dark-mode .chat-sidebar,
+:root.dark-mode .chat-sidebar *,
+:root.dark-mode .chat-sidebar .chat-list-sidebar,
+:root.dark-mode .chat-sidebar .chat-list-sidebar *,
+:root.dark-mode .chat-sidebar[style],
+:root.dark-mode .chat-sidebar .chat-list-sidebar[style],
+:root.dark-mode .chat-sidebar > *,
+:root.dark-mode .chat-sidebar .chat-list-sidebar > * {
+  background: #181028 !important;
+  background-color: #181028 !important;
+  color: #f3f4f6 !important;
+  border-color: #312e81 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* Remove all backgrounds from inline styles (target style attribute directly) */
+:root.dark-mode .chat-sidebar[style],
+:root.dark-mode .chat-sidebar .chat-list-sidebar[style] {
+  background: #181028 !important;
+  background-color: #181028 !important;
+}
+
+/* Remove background from all elements inside chat sidebar (last resort) */
+:root.dark-mode .chat-sidebar * {
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* FINAL: Force chat sidebar dark mode, override inline background */
+:root.dark-mode .chat-sidebar {
+  background: #181028 !important;
+  background-color: #181028 !important;
+  color: #f3f4f6 !important;
+  border-color: #312e81 !important;
+  box-shadow: 2px 0 16px rgba(0,0,0,0.32) !important;
+}
+
+/* --- CRITICAL: Remove inline background on chat-sidebar in dark mode --- */
+:root.dark-mode .chat-sidebar[style] {
+  /* Remove the inline background set by Angular template */
+  background: #181028 !important;
+  background-color: #181028 !important;
+  /* Remove any inline box-shadow if needed */
+  box-shadow: 2px 0 16px rgba(0,0,0,0.32) !important;
+  color: #f3f4f6 !important;
+  border-color: #312e81 !important;
+}
+
+/* Remove background from all direct children (header, content) */
+:root.dark-mode .chat-sidebar > * {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+/* Remove background from all divs inside chat-sidebar */
+:root.dark-mode .chat-sidebar div,
+:root.dark-mode .chat-sidebar div * {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+/* Remove background from chat-list-sidebar and its children */
+:root.dark-mode .chat-list-sidebar,
+:root.dark-mode .chat-list-sidebar * {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+/* Remove border-bottom color for divider lines in chat list */
+:root.dark-mode .chat-sidebar [style*="border-bottom:1px solid #eee"] {
+  border-bottom: 1px solid #312e81 !important;
+}
+
+/* Muted/placeholder text */
+:root.dark-mode .chat-sidebar ::placeholder,
+:root.dark-mode .chat-sidebar [style*="color:#888"],
+:root.dark-mode .chat-sidebar [style*="color:#666"] {
+  color: #bdb7d6 !important;
+}
+
+/* Chat sidebar overlay */
+:root.dark-mode .chat-sidebar-overlay {
+  background: rgba(0,0,0,0.45) !important;
+}
+
+/* Unread badge */
+:root.dark-mode .chat-notif-badge {
+  background: #a21caf !important;
+  color: #fff !important;
+}
+
+/* Remove background-image and box-shadow from all elements inside chat sidebar */
+:root.dark-mode .chat-sidebar *,
+:root.dark-mode .chat-list-sidebar * {
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+.chat-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.3em;
+  transition: all 0.3s ease;
+}
+
+.chat-btn:hover {
+  transform: scale(1.1);
+}
+
+.chat-notif-badge {
+  position: absolute;
+  top: -0.2em;
+  right: -0.2em;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.75em;
+  padding: 0.2em 0.5em;
+  min-width: 1.5em;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Ensure nav-links items are properly aligned */
+.nav-links {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-email {
+  color: #fff;
+  font-size: 0.9em;
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .user-section {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+  
+  .user-email {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .logout-btn {
+    width: 100%;
+  }
+  
+  .chat-btn {
+    justify-self: center;
+  }
+}
+
+/* Fix switch alignment in nav */
+.switch {
+  margin-left: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  height: 2.2em;
+  vertical-align: middle;
+  position: relative;
+}
+
+.switch__input {
+  margin: 0;
+  vertical-align: middle;
+}
+
+.switch__icon {
+  margin-left: 0.3em;
+  margin-right: 0.1em;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+  .switch {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    align-self: flex-start;
+    height: 2.2em;
+  }
+}
+
+/* Fix for moon icon visibility in switch */
+.switch__icon--dark {
+  opacity: 1;
+  margin-top: 5px;
+  margin-left: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.switch__icon--light {
+  opacity: 1;
+  margin-top: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Hide/show icons based on checked state using adjacent sibling selector */
+.switch__input:not(:checked) ~ .switch__icon--dark {
+  opacity: 0;
+  transform: translateX(-0.75em) rotate(30deg) scale(0.75);
+  pointer-events: none;
+}
+
+.switch__input:checked ~ .switch__icon--light {
+  opacity: 0;
+  transform: translateX(-0.75em) rotate(-30deg) scale(0.75);
+  pointer-events: none;
+}
+
+.switch__input:checked ~ .switch__icon--dark {
+  opacity: 1;
+  transform: translateX(-1.5em);
+  pointer-events: auto;
+}
