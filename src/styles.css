@@ -1,0 +1,211 @@
+/* You can add global styles to this file, and also import other style files */
+/* Light mode (default) */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Dark mode styles */
+:root.dark-mode {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border-color: #475569;
+  --shadow: rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
+}
+
+:root.dark-mode body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:root.dark-mode body .barangay-admin-form,
+:root.dark-mode app-root .barangay-admin-form,
+:root.dark-mode .barangay-admin-form {
+  background: #181028 !important;
+  border-color: #312e81 !important;
+  box-shadow: 0 6px 32px rgba(45,10,75,0.18) !important;
+}
+
+
+:root.dark-mode .header {
+  background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+:root.dark-mode .link {
+  color: #e9d5ff !important;
+}
+
+:root.dark-mode .link:hover {
+  color: #f3e8ff !important;
+}
+
+:root.dark-mode .container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:root.dark-mode .footer {
+  color: var(--text-secondary) !important;
+  border-top-color: var(--border-color) !important;
+  background: var(--bg-secondary);
+}
+
+:root.dark-mode .form {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+  border-color: #475569 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+:root.dark-mode .title {
+  color: #a78bfa !important;
+}
+
+:root.dark-mode input,
+:root.dark-mode textarea {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: var(--text-primary) !important;
+}
+
+:root.dark-mode input::placeholder,
+:root.dark-mode textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+:root.dark-mode input:focus,
+:root.dark-mode textarea:focus {
+  background: #1e293b !important;
+  border-color: #a78bfa !important;
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.1) !important;
+}
+
+:root.dark-mode .btn {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%) !important;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3) !important;
+}
+
+:root.dark-mode .btn:hover {
+  box-shadow: 0 6px 24px rgba(124, 58, 237, 0.5) !important;
+}
+
+:root.dark-mode .btn.ghost {
+  color: #a78bfa !important;
+  border-color: #a78bfa !important;
+}
+
+:root.dark-mode .btn.ghost:hover {
+  background: #4c1d95 !important;
+}
+
+:root.dark-mode .card {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+  box-shadow: 0 2px 8px var(--shadow) !important;
+}
+
+:root.dark-mode .card:hover {
+  box-shadow: 0 8px 24px rgba(109, 40, 217, 0.25) !important;
+}
+
+:root.dark-mode .card-title {
+  color: var(--text-primary) !important;
+}
+
+:root.dark-mode .card-title:hover {
+  color: #a78bfa !important;
+}
+
+:root.dark-mode .muted {
+  color: var(--text-secondary) !important;
+}
+
+:root.dark-mode .meta {
+  color: #cbd5e1 !important;
+}
+
+:root.dark-mode .preview {
+  background: linear-gradient(135deg, #1e3a1f 0%, #082f1a 100%) !important;
+  color: #d1fae5 !important;
+  border-left-color: #10b981 !important;
+}
+
+:root.dark-mode .pill {
+  border-color: #475569 !important;
+  background: #334155 !important;
+  color: #e9d5ff !important;
+}
+
+:root.dark-mode .pill:hover {
+  border-color: #a78bfa !important;
+  background: #4c1d95 !important;
+}
+
+:root.dark-mode .pill.active {
+  background: #7c3aed !important;
+  border-color: #7c3aed !important;
+}
+
+:root.dark-mode #map {
+  border-color: #475569 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+:root.dark-mode #addressInput {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: var(--text-primary) !important;
+}
+
+:root.dark-mode #addressInput:focus {
+  border-color: #a78bfa !important;
+  background: #1e293b !important;
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.1) !important;
+}
+
+:root.dark-mode .error {
+  color: #fca5a5 !important;
+}
+
+:root.dark-mode .empty {
+  color: var(--text-secondary) !important;
+}
+
+:root.dark-mode .badge.available {
+  background: #1e3a8a !important;
+  color: #93c5fd !important;
+}
+
+:root.dark-mode .badge.accepted {
+  background: #4c1d95 !important;
+  color: #e9d5ff !important;
+}
+
+:root.dark-mode .badge.completed {
+  background: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Remove or override any global nav-links background for dark mode support */
+.nav-links,
+.nav-links.open {
+  background: unset !important;
+}

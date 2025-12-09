@@ -1,0 +1,164 @@
+:root.dark-mode .field select {
+  background: #2a1747 !important;
+  color: #fff !important;
+  border: 1px solid #a78bfa !important;
+  transition: border-color 0.2s;
+}
+:root.dark-mode .field select:focus {
+  border-color: #a78bfa !important;
+  outline: none;
+}
+:root.dark-mode .field select option {
+  background: #2a1747 !important;
+  color: #fff !important;
+}
+.field select {
+  background: #f9fafb;
+  color: #181028;
+  border: 1px solid #d1d5db;
+  transition: border-color 0.2s;
+}
+.field select:focus {
+  border-color: #6d28d9;
+  outline: none;
+}
+.field select option {
+  background: #fff;
+  color: #181028;
+}
+/* Dark mode styles */
+:root.dark-mode body .barangay-admin-form,
+:root.dark-mode app-root .barangay-admin-form {
+  background: #181028 !important;
+  border-color: #312e81 !important;
+  box-shadow: 0 6px 32px rgba(45,10,75,0.18) !important;
+}
+:root.dark-mode .barangay-admin-form h2 {
+  color: #fff !important;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+:root.dark-mode .barangay-admin-form * {
+  color: #fff !important;
+}
+:root.dark-mode .field label {
+  color: #fff !important;
+}
+:root.dark-mode .field input {
+  background: #232136;
+  color: #fff !important;
+  border-color: #312e81;
+}
+:root.dark-mode .field input:focus,
+:root.dark-mode .field select:focus {
+  border-color: #a78bfa;
+}
+:root.dark-mode .btn {
+  background: linear-gradient(135deg, #a21caf 0%, #6d28d9 100%);
+  color: #fff;
+}
+:root.dark-mode .btn:hover {
+  background: #7c3aed;
+}
+:root.dark-mode .success-message {
+  background: #232136;
+  color: #fff !important;
+  border-color: #312e81;
+}
+
+.barangay-admin-form {
+  max-width: 520px;
+  margin: 3em auto;
+  padding: 2.5em 2em 2em 2em;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(109,40,217,0.10);
+  border: 1px solid #e5e7eb;
+  position: relative;
+}
+.barangay-admin-form h2 {
+  color: #6d28d9;
+  margin-bottom: 2em;
+  text-align: center;
+  /* background: #fff; */
+}
+
+:root.dark-mode body .barangay-admin-form,
+:root.dark-mode app-root .barangay-admin-form,
+:root.dark-mode .barangay-admin-form {
+  background: #181028 !important;
+  border-color: #312e81 !important;
+  box-shadow: 0 6px 32px rgba(45,10,75,0.18) !important;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.field {
+  margin-bottom: 1.5em;
+  display: flex;
+  flex-direction: column;
+}
+.field label {
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  /* color: #312e81; */
+  font-size: 1.08em;
+}
+.field input,
+.field select {
+  padding: 0.7em 1em;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 1em;
+  background: #f9fafb;
+  transition: border-color 0.2s;
+}
+.field input:focus,
+.field select:focus {
+  border-color: #6d28d9;
+  outline: none;
+}
+.field input[type="file"] {
+  margin-top: 0.3em;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.btn {
+  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+  color: #fff;
+  border: none;
+  padding: 0.7em 1.4em;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.08em;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(109,40,217,0.08);
+}
+.btn:hover {
+  background: #7c3aed;
+  box-shadow: 0 4px 16px rgba(109,40,217,0.18);
+}
+.success-message {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1em;
+  background: #f0fdf4;
+  border-radius: 8px;
+  padding: 1em;
+  margin-top: 1em;
+  color: #22c55e;
+  border: 1px solid #bbf7d0;
+}
+@media (max-width: 600px) {
+  .barangay-admin-form {
+    padding: 1.2em 0.5em;
+    max-width: 98vw;
+  }
+  .barangay-admin-form h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1.2em;
+  }
+}

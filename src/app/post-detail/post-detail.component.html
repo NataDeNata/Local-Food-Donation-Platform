@@ -1,0 +1,33 @@
+<section *ngIf="donation; else notFound">
+  <a routerLink="/" class="link">&larr; Back to list</a>
+  <h1 class="title">{{ donation.title }}</h1>
+  <div class="detail">
+    <div class="row"><span class="label">Description:</span> {{ donation.description }}</div>
+    <div class="row"><span class="label">Quantity:</span> {{ donation.quantity }}</div>
+    <div class="row"><span class="label">Freshness:</span> {{ donation.freshness === 'fresh' ? 'Fresh' : (donation.freshness === 'nearlyExpired' ? 'Nearly Expired' : '-') }}</div>
+    <div class="row" *ngIf="donation.freshness === 'nearlyExpired' && donation.expiryDate"><span class="label">Expiry Date:</span> {{ donation.expiryDate }}</div>
+    <div class="row"><span class="label">Barangay:</span> {{ donation.barangay }}</div>
+    <div class="row"><span class="label">Contact:</span> {{ donation.contactName }} — {{ donation.contactPhone }}</div>
+    <div class="row"><span class="label">Status:</span> {{ donation.status }}</div>
+    <div class="row"><span class="label">Posted At:</span> {{ donation.postedAt | date:'short' }}</div>
+    <div class="row" *ngIf="donation.photos?.length">
+      <span class="label">Photos:</span>
+      <div class="photo-gallery">
+        <img *ngFor="let photo of donation.photos"
+             [src]="photo"
+             alt="Donation photo"
+             class="zoomable-photo"
+             (click)="zoomedPhoto = photo"
+        />
+      </div>
+    </div>
+    <!-- Photo zoom modal -->
+    <div class="photo-zoom-modal" *ngIf="zoomedPhoto" (click)="zoomedPhoto = null" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:3000;">
+      <img [src]="zoomedPhoto" alt="Zoomed photo" style="max-width:90vw;max-height:90vh;border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,0.25);background:#fff;" />
+    </div>
+  </div>
+</section>
+<ng-template #notFound>
+  <p class="empty">Donation not found.</p>
+  <a routerLink="/" class="link">Back to list</a>
+</ng-template>

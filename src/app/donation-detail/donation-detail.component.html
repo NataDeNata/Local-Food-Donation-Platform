@@ -1,0 +1,55 @@
+<section *ngIf="donation; else notFound">
+  <a routerLink="/" class="link">&larr; Back to list</a>
+  <h1 class="title">{{ donation.barangay }}</h1>
+  <div class="detail">
+    <!-- Only show the table of posted donations for this barangay -->
+    <div *ngIf="barangayDonations.length > 0">
+      <div style="font-weight:600;font-size:1.15em;margin-bottom:0.7em;">
+        Posted Donations in {{ donation.barangay }}
+      </div>
+      <div class="row" style="display:flex;justify-content:center;">
+        <table
+          class="donation-detail-table"
+          style="width:100%;max-width:1200px;border-collapse:collapse;margin-top:1em;background:var(--table-bg, #fff);"
+        >
+          <thead>
+            <tr style="background:var(--table-header-bg, #f3f4f6);">
+              <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Title</th>
+              <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Description</th>
+              <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Quantity</th>
+              <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Freshness</th>
+              <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Expiry Date</th>
+              <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Barangay</th>
+              <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Status</th>
+              <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Posted At</th>
+              <th style="padding:0.7em 1em;border:1px solid #e5e7eb;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of barangayDonations"
+                [class.highlighted-row]="d.id === highlightedDonationId"
+                [attr.id]="'donation-row-' + d.id">
+              <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Title">{{ d.title }}</td>
+              <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Description">{{ d.description }}</td>
+              <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Quantity">{{ d.quantity }}</td>
+              <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Freshness">{{ d.freshness === 'fresh' ? 'Fresh' : (d.freshness === 'nearlyExpired' ? 'Nearly Expired' : '-') }}</td>
+              <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Expiry Date">{{ d.expiryDate || '-' }}</td>
+              <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Barangay">{{ d.barangay }}</td>
+              <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Status">{{ d.status }}</td>
+              <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Posted At">{{ d.postedAt | date:'short' }}</td>
+              <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Actions">
+                <button class="btn" (click)="acceptDonation(d)" *ngIf="d.status === 'available'">Accept</button>
+                <a [routerLink]="['/post', d.id]" class="btn secondary" style="margin-left:0.5em;">View Details</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="barangayDonations.length === 0" style="margin-top:1em;color:#888;">No donations found for this barangay.</div>
+  </div>
+</section>
+<ng-template #notFound>
+  <p class="empty">Donation not found.</p>
+  <a routerLink="/" class="link">Back to list</a>
+</ng-template>

@@ -1,0 +1,42 @@
+.detail {
+  margin: 2em auto;
+  max-width: 600px;
+  background: var(--post-detail-bg, #fff);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 2em;
+  color: var(--post-detail-text, #222);
+}
+
+/* Strong dark mode override for background and text */
+@media (prefers-color-scheme: dark) {
+  .detail {
+    background: #222 !important;
+    color: #f3f4f6 !important;
+  }
+}
+
+.row {
+  margin-bottom: 1em;
+  font-size: 1.1em;
+}
+.label {
+  font-weight: 600;
+  margin-right: 0.5em;
+  color: #7c3aed;
+}
+
+.photo-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.zoomable-photo {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  object-fit: contain;
+}

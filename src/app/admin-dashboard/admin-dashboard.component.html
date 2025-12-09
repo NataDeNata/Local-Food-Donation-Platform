@@ -1,0 +1,107 @@
+<div class="admin-dashboard">
+  <h1>Admin Dashboard</h1>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="loading">Loading...</div>
+  <div class="request-list">
+    <div *ngFor="let user of users" class="request-card">
+      <div class="request-header">
+        <span class="request-email">{{ user.email }}</span>
+        <span class="request-role">Role: {{ user.role }}</span>
+        <span class="request-pending" *ngIf="user.pendingAdmin">Pending Admin Request</span>
+      </div>
+      <!-- Description for barangay admin -->
+      <div *ngIf="user.roles && user.roles['barangayAdmin']" class="barangay-admin-desc" style="margin:0.5em 0; color:#2563eb;">
+        <strong>Barangay Admin:</strong>
+        Barangay: {{ user.roles['barangayAdmin'] }}<span *ngIf="user.position">, Position: {{ user.position }}</span>
+      </div>
+      <div class="request-details" *ngIf="user.pendingAdmin">
+        <div><strong>Name:</strong> {{ user.name }}</div>
+        <div><strong>Barangay:</strong> {{ user.barangay }}</div>
+        <div><strong>Position:</strong> {{ user.position }}</div>
+        <div><strong>Contact:</strong> {{ user.contact }}</div>
+      </div>
+      <div class="request-actions">
+        <button *ngIf="user.pendingAdmin" (click)="approveAdmin(user)">Approve as Admin</button>
+        <button *ngIf="user.pendingAdmin" (click)="rejectAdmin(user)" style="background:#dc2626; color:#fff; margin-left:0.5rem;">Reject Admin Application</button>
+        <button *ngIf="user.pendingAdmin" (click)="viewApplication(user)">View Application</button>
+        <button (click)="removeUser(user)" style="background:#dc2626; color:#fff;">Delete User</button>
+        <button *ngIf="user.role === 'admin' && user.email !== 'ynatz.ynatz@gmail.com'" (click)="removeAdmin(user)" style="background:#f59e42; color:#fff; margin-left:0.5rem;">Remove Admin Privilege</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for application details -->
+<div *ngIf="selectedApplication" class="modal-overlay">
+  <div class="modal-content">
+    <h2>Barangay Official Application Details</h2>
+    <div><strong>Name:</strong> {{ selectedApplication.name }}</div>
+    <div><strong>Email:</strong> {{ selectedApplication.email }}</div>
+    <div><strong>Barangay:</strong> {{ selectedApplication.barangay }}</div>
+    <div><strong>Position:</strong> {{ selectedApplication.position }}</div>
+    <div><strong>Contact:</strong> {{ selectedApplication.contact }}</div>
+    <div *ngIf="selectedApplication.pdfUrl">
+      <strong>Barangay Certificate (PDF):</strong>
+      <a [href]="selectedApplication.pdfUrl" target="_blank">View PDF</a>
+    </div>
+    <div *ngIf="selectedApplication.photoUrls && selectedApplication.photoUrls.length">
+      <strong>Photos:</strong>
+      <div class="photo-list">
+        <img *ngFor="let url of selectedApplication.photoUrls" [src]="url" alt="Photo" (click)="openImageModal(url)" style="max-width:120px; margin:0.5em; border-radius:8px; cursor:pointer;" />
+      </div>
+    </div>
+    <button (click)="closeModal()">Close</button>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div *ngIf="imageModalUrl" class="image-modal-overlay" (click)="closeImageModal()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <img [src]="imageModalUrl" alt="Full Photo" />
+    <button (click)="closeImageModal()" class="close-btn">×</button>
+  </div>
+</div>
+
+<style>
+.image-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30,41,59,0.85);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.image-modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5em;
+  box-shadow: 0 8px 32px rgba(109,40,217,0.18);
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.image-modal-content img {
+  max-width: 80vw;
+  max-height: 70vh;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+}
+.close-btn {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  font-size: 1.5em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(109,40,217,0.08);
+}
+</style>
