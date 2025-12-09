@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { BARANGAYS } from '../models/barangays';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
@@ -14,6 +15,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./donation-detail.component.css']
 })
 export class DonationDetailComponent implements OnInit, AfterViewInit {
+  barangayList = BARANGAYS;
+  selectedBarangay: string = '';
       async acceptDonation(d: Donation) {
         if (!d.id) return;
         const name = prompt('Enter your name to accept this donation:');
@@ -47,7 +50,8 @@ export class DonationDetailComponent implements OnInit, AfterViewInit {
         quantity: this.editDonation.quantity,
         location: this.editDonation.location,
         latitude: this.editDonation.latitude,
-        longitude: this.editDonation.longitude
+        longitude: this.editDonation.longitude,
+        barangay: this.selectedBarangay
       };
       await this.svc.updateDonation(this.donation.id, update);
       this.editMode = false;
@@ -92,6 +96,7 @@ export class DonationDetailComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')!;
     this.donation = await this.svc.getById(id);
+    // Do not auto-select barangay; always show placeholder
 
     // Get highlight id from query param (e.g., ?highlight=donationId)
     this.route.queryParamMap.subscribe(params => {
@@ -111,9 +116,9 @@ export class DonationDetailComponent implements OnInit, AfterViewInit {
     this.svc.listen(list => {
       this.donations = list;
       if (this.donation?.barangay) {
-        // Only show posted donations (status 'available')
+        // Show both available and accepted donations for this barangay
         this.barangayDonations = list.filter(
-          d => d.barangay === this.donation!.barangay && d.status === 'available'
+          d => d.barangay === this.donation!.barangay && (d.status === 'available' || d.status === 'accepted')
         );
       } else {
         this.barangayDonations = [];

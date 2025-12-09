@@ -9,6 +9,9 @@
     <div class="row"><span class="label">Barangay:</span> {{ donation.barangay }}</div>
     <div class="row"><span class="label">Contact:</span> {{ donation.contactName }} — {{ donation.contactPhone }}</div>
     <div class="row"><span class="label">Status:</span> {{ donation.status }}</div>
+    <div class="row" *ngIf="donation.status === 'accepted' && recipientEmail">
+      <span class="label">Recipient Email:</span> {{ recipientEmail }}
+    </div>
     <div class="row"><span class="label">Posted At:</span> {{ donation.postedAt | date:'short' }}</div>
     <div class="row" *ngIf="donation.photos?.length">
       <span class="label">Photos:</span>

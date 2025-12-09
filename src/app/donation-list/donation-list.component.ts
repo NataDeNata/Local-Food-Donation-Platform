@@ -25,8 +25,20 @@ export class DonationListComponent implements OnInit, OnDestroy {
       /**
        * Save the edited donation (stub implementation)
        */
-      saveEdit() {
-        // TODO: Implement save logic for editing a donation
+      async saveEdit() {
+        if (!this.editDonation.id) return;
+        const update: Partial<Donation> = {
+          title: this.editDonation.title,
+          description: this.editDonation.description,
+          quantity: this.editDonation.quantity,
+          // location intentionally omitted
+          latitude: this.editDonation.latitude,
+          longitude: this.editDonation.longitude,
+          barangay: this.editDonation.barangay,
+          freshness: this.editDonation.freshness,
+          expiryDate: this.editDonation.expiryDate
+        };
+        await this.svc.updateDonation(this.editDonation.id as string, update);
         this.editMode = false;
         this.editDonation = {};
       }

@@ -1,6 +1,7 @@
 <section *ngIf="donation; else notFound">
   <a routerLink="/" class="link">&larr; Back to list</a>
-  <h1 class="title">{{ donation.barangay }}</h1>
+  <h1 class="title">Donation Details</h1>
+  <div style="margin-bottom:1em;"></div>
   <div class="detail">
     <!-- Only show the table of posted donations for this barangay -->
     <div *ngIf="barangayDonations.length > 0">
@@ -38,7 +39,12 @@
               <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Status">{{ d.status }}</td>
               <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Posted At">{{ d.postedAt | date:'short' }}</td>
               <td style="padding:0.7em 1em;border:1px solid #e5e7eb;" data-label="Actions">
-                <button class="btn" (click)="acceptDonation(d)" *ngIf="d.status === 'available'">Accept</button>
+                <ng-container *ngIf="d.status === 'available'; else acceptedBlock">
+                  <button class="btn" (click)="acceptDonation(d)">Accept</button>
+                </ng-container>
+                <ng-template #acceptedBlock>
+                  <span style="color:green;font-weight:600;">Accepted</span>
+                </ng-template>
                 <a [routerLink]="['/post', d.id]" class="btn secondary" style="margin-left:0.5em;">View Details</a>
               </td>
             </tr>

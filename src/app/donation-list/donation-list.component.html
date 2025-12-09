@@ -1,5 +1,5 @@
 <section>
-  <h1 class="title">Active donations</h1>
+  <h1 class="title">Active Barangay Donations</h1>
 
   <div *ngIf="loading()" class="page-loading-overlay">
     <div class="spinner"></div>
@@ -182,10 +182,6 @@
                   Quantity
                   <input type="number" [(ngModel)]="editDonation.quantity" name="quantity" required min="1" style="width:100%;margin-top:0.3em;padding:0.5em;border-radius:6px;border:1px solid #d1d5db;" />
                 </label>
-                <label style="font-weight:500;color:#333;">
-                  Location
-                  <input [(ngModel)]="editDonation.location" name="location" required style="width:100%;margin-top:0.3em;padding:0.5em;border-radius:6px;border:1px solid #d1d5db;" />
-                </label>
               </div>
               <div style="display:flex;gap:1em;justify-content:flex-end;margin-top:1.5em;">
                 <button class="btn" type="submit" style="min-width:90px;">Save</button>
@@ -216,7 +212,7 @@
             <span class="badge" *ngIf="d.status === 'available'" style="background:#22c55e;color:#fff;">Available</span>
             <span class="badge" *ngIf="d.status === 'completed'" style="background:#6b7280;color:#fff;">Completed</span>
             <button class="btn secondary" style="margin-left:0.5rem;" (click)="startEdit(d)">Edit</button>
-            <a [routerLink]="['/donation', d.id]" class="btn secondary" style="margin-left:0.5rem;">
+            <a [routerLink]="['/donation', d.id]" [queryParams]="{ highlight: d.id }" class="btn secondary" style="margin-left:0.5rem;">
               View Details
             </a>
             <button class="btn danger" style="margin-left:0.5rem;" (click)="delete(d)">Delete</button>
